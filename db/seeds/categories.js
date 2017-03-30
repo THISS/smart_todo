@@ -1,13 +1,23 @@
 
 exports.seed = function(knex, Promise) {
-  // Deletes ALL existing entries
-  return knex('table_name').del()
+  return knex('categories').del()
     .then(function () {
       return Promise.all([
-        // Inserts seed entries
-        knex('table_name').insert({id: 1, colName: 'rowValue1'}),
-        knex('table_name').insert({id: 2, colName: 'rowValue2'}),
-        knex('table_name').insert({id: 3, colName: 'rowValue3'})
+        knex('categories').insert({
+         name: 'Watch'
+        }),
+        knex('categories').insert({
+         name: 'Read'
+        }),
+        knex('categories').insert({
+         name: 'Eat'
+        }),
+        knex('categories').insert({
+         name: 'Buy'
+        }),
+        knex('categories').insert({
+         name: 'Other'
+        })
       ]);
     });
 };
