@@ -18,14 +18,14 @@ exports.up = function(knex, Promise) {
       table.increments("id");
       table.string("word", 127);
       table.integer("category_id").references("id").inTable("categories");
-    });
+    })
   ]);
 };
 
 exports.down = function(knex, Promise) {
   return Promise.all([
-    knex.schema.dropTable("todos");
-    knex.schema.dropTable("categories");
-    knex.schema.dropTable("keywords");
+    knex.schema.dropTable("todos"),
+    knex.schema.dropTable("categories"),
+    knex.schema.dropTable("keywords")
   ]);
 };
