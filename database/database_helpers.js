@@ -5,7 +5,7 @@ module.exports = (db) => {
   //function to view all Todo lists by user_id
   // TODO: Limit 3 per category for main page use a union
   function selectAllTodo(user_id) {
-    return db.select("*").from("todos").where({user_id});
+    return db.select("*").from("todos").where({user_id: user_id});
   };
 
 //function to view all categories
