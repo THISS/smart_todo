@@ -52,13 +52,19 @@ module.exports = (db) => {
       return Promise.reject(err);
     });
   };
+
+  // Get a list of our supported categories
+  function selectAllCategories() {
+    return db.select("*").from("categories");
+  }
   // Return our module exports object with the functions mapped to their names
   return {
     selectAllTodo: selectAllTodo,
     selectCatTodo: selectCatTodo,
     updateTodo: updateTodo,
     multiRankUpdate: multiRankUpdate,
-    createTodo: createTodo
+    createTodo: createTodo,
+    selectAllCategories: selectAllCategories
   };
 
 };

@@ -3,19 +3,21 @@
 const express = require('express');
 const router  = express.Router();
 
-module.exports = (dbHelpers) =>{
-
+module.exports = (dbHelpers, helperFuncs) =>{
+  const dbError = {error: "Uh oh... Something is a little weird back here."};
+  
   router.get("/", (req, res) => {
     const userid = 1;
-    dbHelpers.selectAllTodo(userid)
-    .then((results) => {
-      res.json(results);
+    Promise.all([
+      dbHelpers.selectAllTodo(userid),
+      dbHelpers.selectAllCategories()
+    ]).then((resArr) => {
+      const responseObj = {todos: resArr[0], categories: resArr[1]};
+      res.json(responseObj);
     }).catch((err) => {
-      console.log(err);
-      res.status(500).json({error: "Uh oh... Something is a little weird back here."})
+      res.status(500).json(dbError)
     });
   });
-
 
   router.get("/category/:catid", (req, res) => {
     const userid = 1;
@@ -24,7 +26,7 @@ module.exports = (dbHelpers) =>{
       res.json(results);
     }).catch((err) => {
       console.log(err);
-      res.status(500).json({error: "Uh oh... Something is a little weird back here."})
+      res.status(500).json(dbError)
     });
   });
 
@@ -36,7 +38,7 @@ module.exports = (dbHelpers) =>{
       res.json(results);
     }).catch((err) => {
       console.log(err);
-      res.status(500).json({error: "Uh oh... Something is a little weird back here."})
+      res.status(500).json(dbError)
     });
   });
 
@@ -50,7 +52,7 @@ module.exports = (dbHelpers) =>{
       res.json(results);
     }).catch((err) => {
       console.log(err);
-      res.status(500).json({error: "Uh oh... Something is a little weird back here."})
+      res.status(500).json(dbError)
     });
   });
 
@@ -60,7 +62,7 @@ module.exports = (dbHelpers) =>{
       res.json(results);
     }).catch((err) => {
       console.log(err);
-      res.status(500).json({error: "Uh oh... Something is a little weird back here."})
+      res.status(500).json(dbError)
     });
   });
 
@@ -70,7 +72,7 @@ module.exports = (dbHelpers) =>{
       res.json(results);
     }).catch((err) => {
       console.log(err);
-      res.status(500).json({error: "Uh oh... Something is a little weird back here."})
+      res.status(500).json(dbError)
     });
   });
 
@@ -80,7 +82,7 @@ module.exports = (dbHelpers) =>{
       res.json(results);
     }).catch((err) => {
       console.log(err);
-      res.status(500).json({error: "Uh oh... Something is a little weird back here."})
+      res.status(500).json(dbError)
     });
   });
 
@@ -90,7 +92,7 @@ module.exports = (dbHelpers) =>{
       res.json(results);
     }).catch((err) => {
       console.log(err);
-      res.status(500).json({error: "Uh oh... Something is a little weird back here."})
+      res.status(500).json(dbError)
     });
   });
 

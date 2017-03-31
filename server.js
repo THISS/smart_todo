@@ -7,6 +7,7 @@ const ENV         = process.env.ENV || "development";
 const express     = require("express");
 const bodyParser  = require("body-parser");
 const app         = express();
+const helperFunctions = require("./utils/helpers.js");
 
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
@@ -42,7 +43,7 @@ if(ENV === "development") {
 
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
-app.use("/todos", todosRoutes(databaseHelpers));
+app.use("/todos", todosRoutes(databaseHelpers, helperFunctions));
 
 // Home page
 app.get("/", (req, res) => {
