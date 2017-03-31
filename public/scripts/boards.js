@@ -19,3 +19,11 @@ function addCard(e) {
     '</div>';
     $(items).prepend(tmpl);
 }
+
+$('#what-todo-box').on('click', function() {
+  $('.what-todo-box-bg').addClass('active')
+})
+
+$('.todo-close').on('click', function() {
+  $('.what-todo-box-bg').removeClass('active')
+})
