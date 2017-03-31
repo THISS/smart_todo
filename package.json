@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
     "start": "node server.js",
-    "local": "./node_modules/nodemon/bin/nodemon --ignore public/",
+    "local": "./node_modules/nodemon/bin/nodemon.js --ignore public/",
     "knex": "./node_modules/knex/bin/knex"
   },
   "author": "Lighthouse Labs",

@@ -21,7 +21,7 @@ module.exports = (dbHelpers) =>{
   });
 
   router.get("/categoryupdate", (req,res) => {
-    const newRanks = [{id:7, rank:1}, {id:6, rank:2}];
+    const newRanks = [{id:24, rank:1}, {id:6, rank:2}];
     dbHelpers.multiRankUpdate(newRanks, (err, val) => {
       if(err) res.statusCode(500).json(err);
       res.json(val);

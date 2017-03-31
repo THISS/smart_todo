@@ -1,11 +1,11 @@
 "use strict";
 
+
+
+
 module.exports = (db) => {
-
-  const databaseHelpers = {};
-
-//function to view all Todo lists
-  databaseHelpers.selectAllTodo = (cb) => {
+  //function to view all Todo lists
+  function selectAllTodo(cb) {
     db
     .select("*")
     .from("todos")
@@ -18,7 +18,7 @@ module.exports = (db) => {
   };
 
 //function to view all categories
-  databaseHelpers.selectCatTodo = (user_id, category_id, cb) => {
+  function selectCatTodo(user_id, category_id, cb) {
     db("todos")
     .select("*")
     .where({
@@ -34,7 +34,7 @@ module.exports = (db) => {
   };
 
 //function to update todo columns
-  databaseHelpers.updateTodo = (updateColumn, todoID, cb) => {
+  function updateTodo(updateColumn, todoID, cb) {
     db("todos").where("id", "=", todoID)
     .update(updateColumn)
     .then((results) => {
@@ -45,9 +45,9 @@ module.exports = (db) => {
   };
 
 //functin to update rankings of todo list
-  databaseHelpers.multiRankUpdate = (todoArr, cb) => {
+  function multiRankUpdate(todoArr, cb) {
     return Promise.all(todoArr.map((todo) => {
-      return this.updateTodo({"rank": todo.rank}, todo.id, cb);
+      return updateTodo({"rank": todo.rank}, todo.id, cb);
     }))
     .then((results) => {
       cb(null, results);
@@ -58,7 +58,7 @@ module.exports = (db) => {
   };
 
 //function to create a todo
-  databaseHelpers.createTodo = (user_id, category_id, title, cb) => {
+  function createTodo(user_id, category_id, title, cb) {
     db("todos").max("rank").where({
         user_id: user_id,
         category_id: category_id
@@ -86,6 +86,13 @@ module.exports = (db) => {
     });
   };
 
-  return databaseHelpers;
+
+  return {
+    selectAllTodo: selectAllTodo,
+    selectCatTodo: selectCatTodo,
+    updateTodo: updateTodo,
+    multiRankUpdate: multiRankUpdate,
+    createTodo: createTodo
+  };
 
 };
