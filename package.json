@@ -7,7 +7,8 @@
     "test": "./node_modules/mocha/bin/mocha",
     "start": "node server.js",
     "local": "./node_modules/nodemon/bin/nodemon.js --ignore public/",
-    "knex": "./node_modules/knex/bin/knex"
+    "knex": "./node_modules/knex/bin/knex",
+    "testdb": "node test/test_files/test_database_helpers.js"
   },
   "author": "Lighthouse Labs",
   "license": "ISC",
@@ -17,13 +18,13 @@
     "ejs": "^2.4.1",
     "express": "^4.13.4",
     "knex": "^0.11.10",
-    "knex-logger": "^0.1.0",
-    "morgan": "^1.7.0",
-    "node-sass-middleware": "^0.9.8",
     "pg": "^6.0.2"
   },
   "devDependencies": {
+    "node-sass-middleware": "^0.9.8",
     "chai": "^3.5.0",
+    "knex-logger": "^0.1.0",
+    "morgan": "^1.7.0",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
     "sqlite3": "^3.1.4"
