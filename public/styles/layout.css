@@ -58,6 +58,9 @@ header h1 {
   top: 0;
 }
 
+#what-todo-box:hover{
+  box-shadow: 2px 2px 2px 2px rgba(0,0,0, .3);
+}
 .what-todo-box-bg.active #what-todo-box {
   width: 900px;
   height: 100px;
