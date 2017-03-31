@@ -13,34 +13,64 @@ const dbHelpers = require("../../database/database_helpers")(knex);
 // TEST the functions
 // /todos
 
-dbHelpers.selectAllTodo((err, success) => {
+console.log(dbHelpers.selectAllTodo().toString());
+
+dbHelpers.selectAllTodo().then((results) => {
+  if(results[0]) {
+    // console.log(results[0]);
+    console.log("selectAllTodo Works!");
+  }
+}).catch((err) => {
   if (err) console.log(err);
-  console.log(`The select all todos works`);
 });
 
 // View all todos in a category
-dbHelpers.selectCatTodo(1, 3, (err, success) => {
+console.log(dbHelpers.selectCatTodo(1, 3).toString());
+
+dbHelpers.selectCatTodo(1, 3).then((results) => {
+  if(results[0]) {
+    // console.log(results[0]);
+    console.log("selectCatTodo Works!");
+  }
+}).catch((err) => {
   if (err) console.log(err);
-  console.log(`The select category todos works`);
 });
 
 // Update Todo (updateColumn(s) Obj, todoId, callback)
-dbHelpers.updateTodo({title: "tests"}, 1, (err, success) => {
-  if (err) console.log(err);
-  console.log(`The update todo works`);
-});
+console.log(dbHelpers.updateTodo({title: "tests"}, 1).toString());
+
+// dbHelpers.updateTodo({title: "tests"}, 1).then((results) => {
+//   if(results[0]) {
+//     // console.log(results[0]);
+//     console.log("updateTodo Works!");
+//   }
+// }).catch((err) => {
+//   if (err) console.log(err);
+// });
 
 // Multi rank update (takes an array of objects with rank and id as properties made from client side, callback)
 const rankArr = [{rank: 2, id: 1}, {rank: 3, id: 2}, {rank: 1, id: 3},{rank: 4, id: 4}];
-dbHelpers.multiRankUpdate(rankArr, (err, success) => {
-  if (err) console.log(err);
-  console.log(`The multi rank update works`);
-});
+console.log(dbHelpers.multiRankUpdate(rankArr).toString());
 
-dbHelpers.createTodo(1, 2, "I really want this test to work", (err, success) => {
-  if (err) console.log(err);
-  console.log(`The create todo works`);
-});
+// dbHelpers.multiRankUpdate(rankArr).then((results) => {
+//   if(results[0]) {
+//     // console.log(results[0]);
+//     console.log("multiRankUpdate Works!");
+//   }
+// }).catch((err) => {
+//   if (err) console.log(err);
+// });
+
+console.log(dbHelpers.createTodo(1, 2, "I really want this test to work"));
+
+// dbHelpers.createTodo(1, 2, "I really want this test to work").then((results) => {
+//   if(results[0]) {
+//     // console.log(results[0]);
+//     console.log("createTodo Works!");
+//   }
+// }).catch((err) => {
+//   if (err) console.log(err);
+// });
 
 
 knex.destroy();

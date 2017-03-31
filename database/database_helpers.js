@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = (db) => {
-  
+
   //function to view all Todo lists
   function selectAllTodo() {
     return db.select("*").from("todos");
@@ -46,6 +46,9 @@ module.exports = (db) => {
         category_id: category_id,
         user_id: user_id
       });
+    })
+    .catch((err) => {
+      return Promise.reject(err);
     });
   };
   // Return our module exports object with the functions mapped to their names
