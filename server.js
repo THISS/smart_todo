@@ -6,6 +6,8 @@ const PORT        = process.env.PORT || 8080;
 const ENV         = process.env.ENV || "development";
 const express     = require("express");
 const bodyParser  = require("body-parser");
+const cookieSession = require("cookie-session");
+const flash = require("connect-flash");
 const app         = express();
 const helperFunctions = require("./utils/helpers.js");
 
@@ -21,6 +23,18 @@ const databaseHelpers = require("./database/database_helpers")(knex);
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieSession({
+  name: "session",
+  keys: process.env.SECRET || "development"
+}));
+app.use(flash());
+app.use((req, res, next) => {
+  if (!req.session.user_id) {
+    req.flash("error", "You must login to play around with the todos");
+    res.render("index", {error: req.flash("error")});
+    return;
+  }
+});
 
 if(ENV === "development") {
   const sass        = require("node-sass-middleware");
