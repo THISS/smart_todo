@@ -1,25 +1,29 @@
 $(function () {
-	var logButton = $("header nav button");
 
-	logButton.click(function() {
+	var logButton = $("header nav button");
+	function toggleClasses() {
+		logButton.toggleClass(".active-logbtn");
+	}
+
+	$("button.logout").click(function() {
 			$.ajax ({
 				url: "/users/login",
-				method: GET,
+				method: "GET",
 				success: function(data) {
 					if(data.loggedIn) {   
-						logButton.text("logout");
+						toggleClasses();
 					}
 			}
 		});
 	});
 
-	logButton.click(function() {
+	$("button.login").click(function() {
 			$.ajax ({
 				url: "/users/logout",
-				method: GET,
+				method: "GET",
 				success: function(data) {
 					if(data.loggedIn) {   
-						logButton.text("login");
+						toggleClasses();
 					}
 			}
 		});
