@@ -14,37 +14,40 @@
 <body>
   <header>
       <nav class="nav has-shadow columns is-desktop" id="top">
-          <h1 class="column is-one-quarter"> Smart GITDONE List</h1>
+          <h1 class="column is-one-quarter"> Smart TODO</h1>
           <div class="column">
             <div class='what-todo-box-bg'>
               <i class="fa fa-times-circle todo-close" aria-hidden="true"></i>
               <input class="input is-large" id="what-todo-box" type="text" name="todo" placeholder="What would you like to do?" ><br>
             </div>
-          </div> 
+          </div>
           <div class="column is-one-quarter">
-          Login Stuff
+               <button type="button">Login</button>
           </div>
     </nav>
   </header>
-  <section class="section">
-      <div class="boards">
+
+
+  <main class="section">
+      <section class="boards">
         <div class="columns">
-          
+
           <div class="column is-3 board" id="b1">
             <div class="box is-gray">
               <div class="head">
-                <div class="name">I</div>
+                <div class="name">Watch</div>
                 <div class="count">1</div>
-                <div class="options"><i class="fa fa-ellipsis-h"></i></div>
               </div>
               <div class="items">
-                <div class="box" id="b1c1">
-                  <p class="title">test item</p>
-                </div>
+                <ul class="box" id="b1c1">
+                  <li><label><input type="checkbox"/>test item</label></li>
+                  <button class="edit"><i class="fa fa-pencil-square-o"></i></button>
+                  <button class="trash"><i class="fa fa-trash-o"></i></button>
+                </ul>
                 <div class="add-card">
                  <div onclick="addCard(this)">
-                  <i class="fa fa-plus-circle"></i> 
-                  Add new card
+                  <i class="fa fa-plus-circle"></i>
+                  Add item
                 </div>
               </div>
             </div>
@@ -54,9 +57,9 @@
           <div class="column is-3 board" id="b2">
             <div class="box is-gray">
               <div class="head">
-                <div class="name">ABSOLUTLEY</div>
+                <div class="name">Eat</div>
                 <div class="count">1</div>
-                <div class="options"><i class="fa fa-ellipsis-h"></i></div>
+                <span class="options"><i class="fa fa-ellipsis-h"></i></span>
               </div>
               <div class="items">
                 <div class="box" id="b2c1">
@@ -64,8 +67,8 @@
                 </div>
                 <div class="add-card">
                  <div onclick="addCard(this)">
-                  <i class="fa fa-plus-circle"></i> 
-                  Add new card
+                  <i class="fa fa-plus-circle"></i>
+                  Add item
                 </div>
               </div>
             </div>
@@ -75,7 +78,7 @@
           <div class="column is-3 board" id="b3">
             <div class="box is-gray">
               <div class="head">
-                <div class="name">HATE</div>
+                <div class="name">Buy</div>
                 <div class="count">1</div>
                 <div class="options"><i class="fa fa-ellipsis-h"></i></div>
               </div>
@@ -85,8 +88,8 @@
                 </div>
                 <div class="add-card">
                  <div onclick="addCard(this)">
-                  <i class="fa fa-plus-circle"></i> 
-                  Add new card
+                  <i class="fa fa-plus-circle"></i>
+                  Add item
                 </div>
               </div>
             </div>
@@ -96,18 +99,17 @@
           <div class="column is-3 board" id="b4">
             <div class="box is-gray">
               <div class="head">
-                <div class="name">BULMA!</div>
+                <div class="name">Read</div>
                 <div class="count">1</div>
                 <div class="options"><i class="fa fa-ellipsis-h"></i></div>
-              </div>
               <div class="items">
                 <div class="box" id="b4c1">
                   <p class="title">test item</p>
                 </div>
                 <div class="add-card">
                  <div onclick="addCard(this)">
-                  <i class="fa fa-plus-circle"></i> 
-                  Add new card
+                  <i class="fa fa-plus-circle"></i>
+                  Add item
                 </div>
               </div>
             </div>
@@ -115,8 +117,8 @@
         </div>
 
       </div>
-    </div>
-</section>
+    </section>
+</main>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
   <script type="text/javascript" src="/scripts/bulma.js"></script>
   <script type="text/javascript" src="/scripts/boards.js"></script>

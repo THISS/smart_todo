@@ -7,11 +7,16 @@ body {
 }
 
 .boards .board .box.is-gray {
-  background-color: #F5F5F5;
+  background-color: #6fde96;
 }
 
 .boards .board .box .items {
   padding: 20px 0;
+  font-size: large;
+}
+
+.boards .box:hover {
+  background-color: #b5b5b5;
 }
 
 .box .head .name {
@@ -22,7 +27,7 @@ body {
 }
 
 .box .head .count {
-  display: inline-block;
+  float: right;
   padding-left: 5px;
   font-size: 20px;
   font-weight: bold;
@@ -33,29 +38,13 @@ body {
   display: inline-block;
   float: right;
   padding-top: 7px;
-  color: #CCCCCC;
-}
-
-.box:not(:last-child) {
-  margin-bottom: 0.5em;
+  color: #2C2C30;
 }
 
 .items .box .title {
   font-size: 19px;
 }
 
-.items .box .meta img {
-  border-radius: 30px;
-  margin-right: 10px;
-}
-
-.items .box .meta .fa {
-  margin: 3px 7px;
-  color: #CCCCCC;
-}
-
-.items .add-card div {
-  color: #AAAAAA;
-  font-weight: bold;
-  font-size: 16px;
+.box {
+  padding: 0.5rem;
 }
