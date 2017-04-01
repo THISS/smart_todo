@@ -1,31 +1,31 @@
 $(function () {
+	const loginBtn = $("button.login");
 
-	var logButton = $("header nav button");
-	function toggleClasses() {
-		logButton.toggleClass(".active-logbtn");
+	function login(button) {
+		$.ajax ({
+			url: "/users/login",
+			method: "GET",
+			success: function(data) {
+				button.text("Logout");
+			}
+		});
 	}
 
-	$("button.logout").click(function() {
-			$.ajax ({
-				url: "/users/login",
-				method: "GET",
-				success: function(data) {
-					if(data.loggedIn) {   
-						toggleClasses();
-					}
+	function logout(button) {
+		$.ajax ({
+			url: "/users/logout",
+			method: "GET",
+			success: function(data) {
+				button.text("Login")
 			}
 		});
-	});
+  }
 
-	$("button.login").click(function() {
-			$.ajax ({
-				url: "/users/logout",
-				method: "GET",
-				success: function(data) {
-					if(data.loggedIn) {   
-						toggleClasses();
-					}
-			}
-		});
+	loginBtn.on("click", function(event) {
+		if(loginBtn.text() === "Login") {
+			login(loginBtn);
+		}else {
+			logout(loginBtn);
+		}
 	});
 });

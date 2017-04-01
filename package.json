@@ -10,6 +10,7 @@
     "knex": "./node_modules/.bin/knex",
     "gulp": "./node_modules/.bin/gulp",
     "live": "npm start | ./node_modules/.bin/gulp",
+    "sass": "./node_modules/.bin/node-sass ./styles --output ./public/styles",
     "testdb": "node test/test_files/test_database_helpers.js"
   },
   "author": "Lighthouse Labs",
