@@ -33,7 +33,7 @@ module.exports = (db) => {
 
 //function to create a todo
 // return a promise inside of a promise instead of .then inside a .then
-  function createTodo(user_id, category_id, title, cb) {
+  function createTodo(user_id, category_id, title) {
     return db("todos").max("rank").where({
         user_id: user_id,
         category_id: category_id
