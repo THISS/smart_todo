@@ -18,6 +18,7 @@
           <div class="column">
             <div class='what-todo-box-bg'>
               <i class="fa fa-times-circle todo-close" aria-hidden="true"></i>
+              <i class="fa fa-plus todo-add" aria-hidden="true"></i>
               <input class="input is-large" id="what-todo-box" type="text" name="todo" placeholder="What would you like to do?" ><br>
             </div>
           </div>
@@ -53,6 +54,36 @@
             </div>
           </div>
         </div>
+
+
+        <div class="column is-3 board" id="b2">
+            <div class="box is-gray">
+              <div class="head">
+                <div class="name">Eat</div>
+                <div class="count">1</div>
+              </div>
+              <div class="items">
+                <ul class="box" id="b1c1">
+                  <li><label><input type="checkbox"/>test item</label></li>
+                  <button class="edit"><i class="fa fa-pencil-square-o"></i></button>
+                  <button class="trash"><i class="fa fa-trash-o"></i></button>
+                </ul>
+                <div class="add-card">
+                 <div onclick="addCard(this)">
+                  <i class="fa fa-plus-circle"></i>
+                  Add item
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+       <a class="button eatsm">Eat</a>
+       <a class="button watchsm">Watch</a>
+        <a class="button buysm">Buy</a>
+        <a class="button readsm">Read</a>
+       </div>
 
           <div class="column is-3 board" id="b2">
             <div class="box is-gray">

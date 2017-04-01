@@ -26,6 +26,23 @@ header h1 {
 }
 
 /* WHAT TO DO BOX */
+.what-todo-box-bg .fa-plus {
+  display: none;
+}
+
+.what-todo-box-bg.active .fa-plus {
+  display: inline-block;
+  position: absolute;
+  top: 100px;
+  right: 100px;
+  font-size: 50px;
+  color: #fff;
+  transition: .3s all ease-in-out;
+}
+
+.what-todo-box-bg.active .fa-plus:hover {
+  color: #ab1c1c;
+}
 
 .what-todo-box-bg .fa-times-circle {
   display: none;
