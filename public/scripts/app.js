@@ -6,8 +6,8 @@ $(function(){
 
   // Handlebars Joy
   // TODO: update the source html to a jQuery .html() of the script tags on the index
-  const sourceTodoHtml = ``;
-  const sourceCatHtml = ``;
+  const sourceTodoHtml = `<li data-id="{{id}}" data-rank="{{rank}}"><label><input type="checkbox" checked="{{completed}}">{{title}}</label></li>`;
+  const sourceCatHtml = `<section><header><h3>{{name}}</h3><h3 class="cat-number"></h3></header><ul class="todo-wrapper"></ul></section>`;
   const templateTodo = Handlebars.compile(sourceTodoHtml);
   const templateCat = Handlebars.compile(sourceCatHtml);
 
@@ -18,8 +18,7 @@ $(function(){
       id: todo.id,
       rank: todo.rank,
       title: todo.title,
-      completed: todo.completed,
-      category_id: todo.category_id,
+      completed: todo.completed
     };
     return templateTodo(context);
   }
@@ -40,19 +39,22 @@ $(function(){
       // render a todo
       let todoHtml = todoMaker(todo);
       // append the todo to the category by id #cat_<category_id> use the categoryObj to do it
-      categoryObj[`cat_${todo.category_id}`].append(todoHtml);
+      console.log(todoHtml);
+      console.log($(categoryObj[todo.category_id]).find(".todo-wrapper"));
+      // $(categoryObj[todo.category_id]).find(".todo-wrapper").append(todoHtml);
     });
+    countTodos();
   }
 
-
   // make a function that loops over array of categories and sends them to categoryMaker
-  function categoryLooper(categoryArr) {
+  function categoryLooper(categoryArr, todoArr, cb) {
     // sort arrays by category id first if they aren't already 
     $("section.categories").html(categoryArr.map((category) => {
       const catHtml = categoryMaker(category);
-      categoryObj[`cat_${category.id}`] = catHtml;
+      categoryObj[category.id] = catHtml;
       return catHtml;
     }));
+    cb(todoArr);
   }
 
   // make a function that gets todos and categories and is the controller
@@ -61,19 +63,13 @@ $(function(){
       method: 'GET',
       url: '/todos',
       success: function (data){
-        categoryLooper(data.categories);
-        todoLooper(data.todos);
+        categoryLooper(data.categories, data.todos, todoLooper);
       },
       fail: function(err) {
         errorFlash.text(err.error);
       }
     });
   }
-
-
-
-
-
 
 /******************************************************************************/
 /*********************** Form submitting todo *********************************/
@@ -94,10 +90,30 @@ $(function(){
     }
   }
 
+  function countTodos() {
+    // count the todo elements in each category and change the number at top right to the count
+    const catNumber = $(".cat-number");
+    catNumber.each(() => {
+      let count = $(this).closest("section").find(".todo-wrapper").children().length;
+      $(this).text(count);
+    });
+  }
+
+  // TODO: make a function that will remove the click handlers to expand to single category mode on all of the categories
+  // TODO: and then removes todos from the categories
+  // TODO: and then adds a click handler to submit the PUT /todos/:todoId/category
+  // TODO: this function will be added to all categories when they are made
+
+  // TODO: make a function that will remove the click handlers to submit PUT /todos/:todoId/category
+  // TODO: and then does an ajax call to PUT /todos/:todoId/category passing the category_id in the body which on success will:
+  // TODO:  - add the todos to the categories by calling todoLooper()
+  // TODO: and then adds a click handler to expand to single category mode on all of the categories
+
   function addedTodo(todo) {
     // TODO: if todo.conflict is true render the select category page
     // TODO: otherwise:
-    // TODO: change the categories number of todos
+    // change the categories number of todos
+    countTodos();
     // TODO: if there is less than 3 todos render the todo to the category
   }
 
@@ -118,4 +134,8 @@ $(function(){
         });
       }
   });
+
+  // Called at start
+  todoController();
+
 });
