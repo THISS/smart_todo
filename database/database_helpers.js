@@ -5,7 +5,7 @@ module.exports = (db) => {
   //function to view all Todo lists by user_id
   // TODO: Limit 3 per category for main page use a union
   function selectAllTodo(user_id) {
-    return db.select("*").from("todos").where({user_id: user_id});
+    return db.select("*").from("todos").where({user_id: user_id, deleted: false});
   };
 
 //function to view all categories
@@ -13,13 +13,14 @@ module.exports = (db) => {
     return db("todos").select("*")
     .where({
       user_id: user_id,
+      deleted: false,
       category_id: category_id
     });
   };
 
 //function to update todo columns
   function updateTodo(updateColumn, todoID) {
-    return db("todos").where("id", "=", todoID)
+    return db("todos").where({id: todoID, deleted: false})
     .update(updateColumn);
   };
 
@@ -57,6 +58,7 @@ module.exports = (db) => {
   function selectAllCategories() {
     return db.select("*").from("categories");
   }
+  
   // Return our module exports object with the functions mapped to their names
   return {
     selectAllTodo: selectAllTodo,

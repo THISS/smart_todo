@@ -32,21 +32,6 @@ module.exports = (dbHelpers, helperFuncs) =>{
     });
   });
 
-
-  router.put("/categoryupdate", (req,res) => {
-    // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
-    // const newRanks = [{id:1, rank:2}, {id:2, rank:1}];
-    const newRanks = req.body.new_ranks;
-    dbHelpers.multiRankUpdate(newRanks)
-    .then((results) => {
-      res.json(results);
-    }).catch((err) => {
-      console.log(err);
-      res.status(500).json(dbError)
-    });
-  });
-
 //used 1 as user_id hardcoded
   router.post("/", (req, res) => {
     // Is user logged in
@@ -56,6 +41,20 @@ module.exports = (dbHelpers, helperFuncs) =>{
     const titleVar = req.body.title;
 
     dbHelpers.createTodo(req.session.user_id, catID, titleVar)
+    .then((results) => {
+      res.json(results);
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).json(dbError)
+    });
+  });
+
+  router.put("/categoryupdate", (req,res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    // const newRanks = [{id:1, rank:2}, {id:2, rank:1}];
+    const newRanks = req.body.new_ranks;
+    dbHelpers.multiRankUpdate(newRanks)
     .then((results) => {
       res.json(results);
     }).catch((err) => {
@@ -91,10 +90,10 @@ module.exports = (dbHelpers, helperFuncs) =>{
     });
   });
 
-  router.delete("/:todoid", (req, res) => {
+  router.put("/:todoid/checked", (req, res) => {
     // Is user logged in
     helperFuncs.isUserLoggedIn(req, res);
-    dbHelpers.updateTodo({deleted: true}, req.params.todoid)
+    dbHelpers.updateTodo({completed: true}, req.params.todoid)
     .then((results) => {
       res.json(results);
     }).catch((err) => {
@@ -103,10 +102,10 @@ module.exports = (dbHelpers, helperFuncs) =>{
     });
   });
 
-  router.put("/:todoid/checked", (req, res) => {
+  router.delete("/:todoid", (req, res) => {
     // Is user logged in
     helperFuncs.isUserLoggedIn(req, res);
-    dbHelpers.updateTodo({completed: true}, req.params.todoid)
+    dbHelpers.updateTodo({deleted: true}, req.params.todoid)
     .then((results) => {
       res.json(results);
     }).catch((err) => {
