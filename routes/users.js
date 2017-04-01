@@ -6,13 +6,15 @@ const router  = express.Router();
 module.exports = (knex, helpers) => {
 
   router.get("/login", (req, res) => {
-    req.session.user_id = helpers.randomId();
-    res.redirect("/");
+    if(!req.session.user_id){
+      req.session.user_id = helpers.randomId();
+    }
+    res.status(302).json({loggedIn: true});
   });
 
   router.get("/logout", (req, res) => {
     req.session.user_id = undefined;
-    res.redirect("/");
+    res.status(302).json({loggedIn: false});
   });
 
   return router;
