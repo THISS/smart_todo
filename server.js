@@ -25,16 +25,9 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: "session",
-  keys: process.env.SECRET || "development"
+  keys: process.env.SECRET || ["development", "fun"]
 }));
 app.use(flash());
-app.use((req, res, next) => {
-  if (!req.session.user_id) {
-    req.flash("error", "You must login to play around with the todos");
-    res.render("index", {error: req.flash("error")});
-    return;
-  }
-});
 
 if(ENV === "development") {
   const sass        = require("node-sass-middleware");
@@ -56,12 +49,12 @@ if(ENV === "development") {
 }
 
 // Mount all resource routes
-app.use("/api/users", usersRoutes(knex));
+app.use("/users", usersRoutes(knex, helperFunctions));
 app.use("/todos", todosRoutes(databaseHelpers, helperFunctions));
 
 // Home page
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("index", {error: req.flash("error")});
 });
 
 app.listen(PORT, () => {

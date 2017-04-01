@@ -5,11 +5,12 @@ const router  = express.Router();
 
 module.exports = (dbHelpers, helperFuncs) =>{
   const dbError = {error: "Uh oh... Something is a little weird back here."};
-  
+
   router.get("/", (req, res) => {
-    const userid = 1;
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
     Promise.all([
-      dbHelpers.selectAllTodo(userid),
+      dbHelpers.selectAllTodo(req.session.user_id),
       dbHelpers.selectAllCategories()
     ]).then((resArr) => {
       const responseObj = {todos: resArr[0], categories: resArr[1]};
@@ -20,8 +21,9 @@ module.exports = (dbHelpers, helperFuncs) =>{
   });
 
   router.get("/category/:catid", (req, res) => {
-    const userid = 1;
-    dbHelpers.selectCatTodo(userid, req.params.catid)
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    dbHelpers.selectCatTodo(req.session.user_id, req.params.catid)
     .then((results) => {
       res.json(results);
     }).catch((err) => {
@@ -30,9 +32,12 @@ module.exports = (dbHelpers, helperFuncs) =>{
     });
   });
 
-  // TODO: change to a put
-  router.get("/categoryupdate", (req,res) => {
-    const newRanks = [{id:1, rank:2}, {id:2, rank:1}];
+
+  router.put("/categoryupdate", (req,res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    // const newRanks = [{id:1, rank:2}, {id:2, rank:1}];
+    const newRanks = req.body.new_ranks;
     dbHelpers.multiRankUpdate(newRanks)
     .then((results) => {
       res.json(results);
@@ -44,10 +49,13 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
 //used 1 as user_id hardcoded
   router.post("/", (req, res) => {
-    const userid  = 1;
-    const catid = 3;
-    const title = "I want to eat pizza";
-    dbHelpers.createTodo(userid, catid, title)
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+
+    const catID = req.body.cat_id;
+    const titleVar = req.body.title;
+
+    dbHelpers.createTodo(req.session.user_id, catID, titleVar)
     .then((results) => {
       res.json(results);
     }).catch((err) => {
@@ -57,7 +65,10 @@ module.exports = (dbHelpers, helperFuncs) =>{
   });
 
   router.put("/:todoid/category", (req, res) => {
-    dbHelpers.updateTodo({category_id: 2}, req.params.todoid)
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    const catID = req.body.cat_id;
+    dbHelpers.updateTodo({category_id: catID}, req.params.todoid)
     .then((results) => {
       res.json(results);
     }).catch((err) => {
@@ -67,7 +78,11 @@ module.exports = (dbHelpers, helperFuncs) =>{
   });
 
   router.put("/:todoid/title", (req,res) => {
-    dbHelpers.updateTodo({title: "I want to read a lullaby"}, req.params.todoid)
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+
+    const titleVar = req.body.title;
+    dbHelpers.updateTodo({title: titleVar}, req.params.todoid)
     .then((results) => {
       res.json(results);
     }).catch((err) => {
@@ -77,6 +92,8 @@ module.exports = (dbHelpers, helperFuncs) =>{
   });
 
   router.delete("/:todoid", (req, res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
     dbHelpers.updateTodo({deleted: true}, req.params.todoid)
     .then((results) => {
       res.json(results);
@@ -87,6 +104,8 @@ module.exports = (dbHelpers, helperFuncs) =>{
   });
 
   router.put("/:todoid/checked", (req, res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
     dbHelpers.updateTodo({completed: true}, req.params.todoid)
     .then((results) => {
       res.json(results);
