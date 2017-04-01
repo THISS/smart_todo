@@ -3,154 +3,117 @@
 const express = require('express');
 const router  = express.Router();
 
-module.exports = (db) =>{
+module.exports = (dbHelpers, helperFuncs) =>{
+  const dbError = {error: "Uh oh... Something is a little weird back here."};
+
   router.get("/", (req, res) => {
-    db
-      .select("*")
-      .from("todos")
-      .then((results) => {
-        res.json(results);
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    Promise.all([
+      dbHelpers.selectAllTodo(req.session.user_id),
+      dbHelpers.selectAllCategories()
+    ]).then((resArr) => {
+      const responseObj = {todos: resArr[0], categories: resArr[1]};
+      res.json(responseObj);
+    }).catch((err) => {
+      res.status(500).json(dbError)
+    });
+  });
+
+  router.get("/category/:catid", (req, res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    dbHelpers.selectCatTodo(req.session.user_id, req.params.catid)
+    .then((results) => {
+      res.json(results);
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).json(dbError)
     });
   });
 
 
-  router.get("/category/:id", (req, res) => {
-    db("todos")
-      .select("*")
-      .where({
-        user_id: 1,
-        category_id: req.params.id
-      })
-      .then((val) => {
-        return res.json(val);
-      })
-      .catch((err) => {
-        console.log("Error", err)
-      });
-  });
-
-  router.get("/categoryupdate", (req,res) => {
-    const newRanks = [{id:7, rank:1}, {id:6, rank:2}];
-
-
-    newRanks.forEach(function(item){
-      console.log(item); db("todos").where("id", "=", item.id)
-      .update({
-        rank: item.rank
-      })
-      .then((val) => {
-        res.send();
-      }).catch((err) => {
-        console.log("Error", err)
-      });
+  router.put("/categoryupdate", (req,res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    // const newRanks = [{id:1, rank:2}, {id:2, rank:1}];
+    const newRanks = req.body.new_ranks;
+    dbHelpers.multiRankUpdate(newRanks)
+    .then((results) => {
+      res.json(results);
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).json(dbError)
     });
   });
 
 //used 1 as user_id hardcoded
   router.post("/", (req, res) => {
-    console.log("got here");
-    db("todos").max("rank").where({
-          user_id: 1,
-          category_id: 3
-        })
-    .then((val)=> {
-      console.log(val);
-      console.log(val[0].max);
-      var valToUse = val[0].max? val[0].max + 1 : 1;
-      db("todos").insert({
-        rank: valToUse,
-        title: 'I want to eat at Subway',
-        completed: false,
-        deleted: false,
-        category_id: 3,
-        user_id: 1
-      })
-      .then((val) => {
-          return res.send();
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
 
-        })
-      .catch((err) => {
-        console.log("Error", err)
-      });
+    const catID = req.body.cat_id;
+    const titleVar = req.body.title;
+
+    dbHelpers.createTodo(req.session.user_id, catID, titleVar)
+    .then((results) => {
+      res.json(results);
     }).catch((err) => {
-        console.log("Error", err)
+      console.log(err);
+      res.status(500).json(dbError)
     });
   });
 
-  router.put("/:id/category", (req, res) => {
-    db("todos")
-    .update({
-      category_id: 2
-    }).where({
-       id: req.params.id
-      })
-    .then((val) => {
-        res.send();
-      })
-    .catch((err) => {
-        console.log("Error", err)
-      });
+  router.put("/:todoid/category", (req, res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    const catID = req.body.cat_id;
+    dbHelpers.updateTodo({category_id: catID}, req.params.todoid)
+    .then((results) => {
+      res.json(results);
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).json(dbError)
+    });
   });
 
-  router.put("/:id/title", (req,res) => {
-    db("todos")
-    .update({
-      title: 'I want to eat at my house'
-    }).where({
-      id: req.params.id
-      })
-    .then((val) => {
-      res.send();
-      })
-    .catch((err) => {
-      console.log("Error", err)
-      });
+  router.put("/:todoid/title", (req,res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+
+    const titleVar = req.body.title;
+    dbHelpers.updateTodo({title: titleVar}, req.params.todoid)
+    .then((results) => {
+      res.json(results);
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).json(dbError)
+    });
   });
 
-  router.delete("/:id", (req, res) => {
-    db("todos")
-    .update({
-      deleted: true
-      })
-    .where({
-      id: req.params.id
-    })
-    .then((val) => {
-      res.send();
-      })
-    .catch((err) => {
-      console.log("Error", err)
-      });
+  router.delete("/:todoid", (req, res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    dbHelpers.updateTodo({deleted: true}, req.params.todoid)
+    .then((results) => {
+      res.json(results);
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).json(dbError)
+    });
   });
 
-
-  router.put("/:id/checked", (req, res) => {
-    db("todos")
-    .update({
-      completed: true
-    }).where({
-      id: req.params.id
-      })
-    .then((val) => {
-      res.send();
-      })
-    .catch((err) => {
-      console.log("Error", err)
-      });
+  router.put("/:todoid/checked", (req, res) => {
+    // Is user logged in
+    helperFuncs.isUserLoggedIn(req, res);
+    dbHelpers.updateTodo({completed: true}, req.params.todoid)
+    .then((results) => {
+      res.json(results);
+    }).catch((err) => {
+      console.log(err);
+      res.status(500).json(dbError)
+    });
   });
-
-// const ranks = [{id: 1, rank: 4},{id: 2, rank: 3},{id: 3, rank: 2}];
-//   router.put("/:id/category/rank", (req, res) => {
-//     db("todos").where("id", "=", 1)
-//     .update({
-//       rank: req.params.(newid)
-//     })
-//     .then((val) => {
-//       res.send();
-//     }).catch((err) => {
-//       console.log("Error", err)
-//     });
-//   });
 
   return router;
 };
