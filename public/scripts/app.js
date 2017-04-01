@@ -11,17 +11,17 @@ $(() => {
   });
 });
 
-function loadtodos(){
+function loadWhatTodos(){
   $.ajax({
     method: 'GET',
-    url: '/',
-    success: (data) => rendertodo(data)
+    url: '/todos',
+    success: (data) => renderWhatTodos(data)
   });
 };
 
 $('#what-todo-box').on('submit', function (event) {
     event.preventDefault();
-    var text = $('##what-todo-box text');
+    var text = $('#what-todo-box text');
 
     if(validateForm(text)) {
       $.ajax({
@@ -29,8 +29,7 @@ $('#what-todo-box').on('submit', function (event) {
         url:'/',
         data: text.serialize(),
         success: function(){
-  
-          loadtweets();
+          loadWhatTodos();
           text.val('');
         }
       });
@@ -51,7 +50,11 @@ function validateForm(text) {
   }
 }
 
-
+function renderWhatTodos(data) {
+    for(i=0; i<todos.length; i++){
+      $('#todos').append(todo.title[i]);
+    }
+}
 
 
 });
