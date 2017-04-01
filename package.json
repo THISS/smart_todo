@@ -8,6 +8,8 @@
     "start": "node server.js",
     "local": "./node_modules/nodemon/bin/nodemon.js --ignore public/",
     "knex": "./node_modules/.bin/knex",
+    "gulp": "./node_modules/.bin/gulp",
+    "live": "npm start | ./node_modules/.bin/gulp",
     "testdb": "node test/test_files/test_database_helpers.js"
   },
   "author": "Lighthouse Labs",
@@ -24,6 +26,9 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-livereload": "^3.8.1",
+    "gulp-watch": "^4.3.11",
     "knex-cleaner": "^1.1.3",
     "knex-logger": "^0.1.0",
     "mocha": "^3.2.0",
