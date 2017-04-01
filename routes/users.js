@@ -9,12 +9,12 @@ module.exports = (knex, helpers) => {
     if(!req.session.user_id){
       req.session.user_id = helpers.randomId();
     }
-    res.status(302).json({loggedIn: true});
+    res.json({loggedIn: true});
   });
 
   router.get("/logout", (req, res) => {
     req.session.user_id = undefined;
-    res.status(302).json({loggedIn: false});
+    res.json({loggedIn: false});
   });
 
   return router;
