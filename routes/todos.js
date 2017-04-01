@@ -49,7 +49,7 @@ module.exports = (dbHelpers, helperFuncs) =>{
     });
   });
 
-  router.put("/categoryupdate", (req,res) => {
+  router.put("/rankupdate", (req,res) => {
     // Is user logged in
     helperFuncs.isUserLoggedIn(req, res);
     // const newRanks = [{id:1, rank:2}, {id:2, rank:1}];
