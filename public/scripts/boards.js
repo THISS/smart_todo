@@ -21,3 +21,7 @@ $('#what-todo-box').on('click', function() {
 $('.todo-close').on('click', function() {
   $('.what-todo-box-bg').removeClass('active')
 })
+
+$('.todo-add').on('click', function() {
+  $('.what-todo-box-bg').removeClass('active')
+})
