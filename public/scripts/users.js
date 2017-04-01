@@ -1,5 +1,6 @@
 $(function () {
 	const loginBtn = $("button.login");
+	const errorFlash = $(".error-flash");
 
 	function login(button) {
 		$.ajax ({
@@ -7,6 +8,9 @@ $(function () {
 			method: "GET",
 			success: function(data) {
 				button.text("Logout");
+			},
+			fail: function(error) {
+				errorFlash.text(error.error);
 			}
 		});
 	}
@@ -17,6 +21,9 @@ $(function () {
 			method: "GET",
 			success: function(data) {
 				button.text("Login")
+			},
+			fail: function(err) {
+				errorFlash.text(error.error);
 			}
 		});
   }
