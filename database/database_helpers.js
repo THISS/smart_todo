@@ -5,17 +5,20 @@ module.exports = (db) => {
   //function to view all Todo lists by user_id
   // TODO: Limit 3 per category for main page use a union
   function selectAllTodo(user_id) {
-    return db.select("*").from("todos").where({user_id: user_id, deleted: false});
+    return db("todos").select("id", "rank", "title", "completed", "category_id")
+    .where({user_id: user_id, deleted: false})
+    .orderBy("rank");
   };
 
 //function to view all categories
   function selectCatTodo(user_id, category_id) {
-    return db("todos").select("*")
+    return db("todos").select("id", "rank", "title", "completed", "category_id")
     .where({
       user_id: user_id,
       deleted: false,
       category_id: category_id
-    });
+    })
+    .orderBy("rank");
   };
 
 //function to update todo columns
@@ -56,7 +59,7 @@ module.exports = (db) => {
 
   // Get a list of our supported categories
   function selectAllCategories() {
-    return db.select("*").from("categories");
+    return db("categories").select("*").orderBy("id");
   }
   
   // Return our module exports object with the functions mapped to their names
