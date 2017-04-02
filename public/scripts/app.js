@@ -1,6 +1,9 @@
 $(function(){
   // Targets
   const errorFlash = $(".error-flash");
+  const categories = $(".categories");
+  let catSection;
+  const whatTodoBox = $('#what-todo-box');
   // Add the categories to this obj for fast lookup for the todos
   const categoryObj = {};
 
@@ -68,34 +71,147 @@ $(function(){
     });
   }
 
-  function updateCategory() {
-    // TODO: the PUT to change a todos category
+  // get all the todos for the category
+  function getTodosForCategory(categoryId, errCb, successCb) {
+    $.ajax({
+      method: 'GET',
+      url: `/todos/category/${categoryId}`,
+      success: successCb,
+      fail: errCb
+    });
   }
+
+  // get a Todo
+  function getATodo(todoId, errCb, successCb) {
+    $.ajax({
+      method: 'GET',
+      url: `/todos/${todoId}`,
+      success: successCb,
+      fail: errCb
+    });
+  }
+
+  // Delete Todo
+  function deleteTodo(todoId, errCb, successCb) {
+    $.ajax({
+      method: 'DELETE',
+      url: `/todos/${todoId}/delete`,
+      success: successCb,
+      fail: errCb
+    });
+  }
+
+  // Update the category
+  function updateCategory(catId, todoId, errCb, successCb) {
+    const updateObj = {category_id: catId};
+    $.ajax({
+      method: 'PUT',
+      url:`/todos/${todoId}/category`,
+      data: updateObj,
+      success: successCb,
+      fail: errCb
+    });
+  }
+  // Update the title
+  function updateTitle(title, todoId, errCb, successCb) {
+    const updateObj = {title: title};
+    $.ajax({
+      method: 'PUT',
+      url:`/todos/${todoId}/title`,
+      data: updateObj,
+      success: successCb,
+      fail: errCb
+    });
+  }
+
+  // update the completed
+  function updateCompleted(completed , todoId, errCb, successCb) {
+    const updateObj = {completed: completed};
+    $.ajax({
+      method: 'PUT',
+      url:`/todos/${todoId}/completed`,
+      data: updateObj,
+      success: successCb,
+      fail: errCb
+    });
+  }
+
+  // Change the ranks in a category
+  // TODO: need to pass in an array of objects in the form {id: todoId, rank: newRank}
+  function updateRanks(todoRanksObj, errCb, successCb) {
+    $.ajax({
+      method: 'PUT',
+      url: `/todos/rankupdate`,
+      data: todoRanksObj,
+      success: successCb,
+      fail: errCb
+    });
+  }
+
+  // Insert a new todo
+  function insertTodo(errCb, successCb) {
+    $.ajax({
+      method: 'POST',
+      url:'/todos',
+      data: whatTodoBox.val().serialize(),
+  // TODO: on route we need to send back down a todo obj with a property of .conflict set to either false or true if could not choose cat
+      success: successCb,
+      fail: errCb
+    });
+  }
+/******************************************************************************/
+/*********************** Set Events to Watch **********************************/
+/******************************************************************************/
+
+  // When someone submits a todo 
+  whatTodoBox.on('submit', function (event) {
+      event.preventDefault();
+
+      if(validateForm(whatTodoBox)) {
+        insertTodo(errorFlasher, addedTodo);
+      }
+  });
+
+  categories.on("click", "section", renderCategoryFocus);
 
 
 /******************************************************************************/
 /*********************** Our helper functions *********************************/
 /******************************************************************************/
 
-  // make a function that gets todos and categories and is the controller
+  // On update rerender the todo
+  // TODO:
+  function rerenderTodo(todoId) {
+    // use jQuery remove before populating again - making a get /todos/:todoId
+    getATodo(todoId, errorFlasher, (todo) => {
+      categoryObj[todo.category_id].find(`ul[data-id="${todo.id}"]`).replaceWith(todoMaker(todo));
+    });
+  }
+
+  // make a function that gets todos and categories and is the controller for the start
   function startController(){
-    getAllTodosAndCategories((err) => {
-      errorFlash.text(err.error);
-    }, (data) => {
+    getAllTodosAndCategories(errorFlasher, (data) => {
         categoryLooper(data.categories);
         populateCategoryObj(data.categories);
+        catSection = categories.find("section");
         todoLooper(data.todos);
     });
   }
 
+  // Display a flash error
+  function errorFlasher(err) {
+    errorFlash.text(err.error);
+  }
+
+  // add jQuery objects of each of the categories for future use to categoryObj
   function populateCategoryObj(categories) {
     categories.forEach((category) => {
       categoryObj[category.id] = $(`.categories section[data-id="${category.id}"]`);
     }); 
   }
 
+  // count the todo elements in each category and change the number at top right to the count
   function countTodos() {
-    // count the todo elements in each category and change the number at top right to the count
     const catNumber = $(".cat-number");
     catNumber.each(function(){
       let count = $(this).closest("section").find(".todo-wrapper").children().length;
@@ -103,13 +219,19 @@ $(function(){
     });
   }
 
-
   function addedTodo(todo) {
-    // TODO: if todo.conflict is true render the select category page
-    // TODO: otherwise:
-    // change the categories number of todos
+    // if todo.conflict is true render the select category page
+    if(todo.conflict) {
+      renderSelectCategoryPage(todo);
+    }else {
+      whatTodoBox.val('');
+      // change the categories number of todos
+      const categoryUl = categoryObj[todo.category_id].find("ul");
+      if(categoryUl.children().length < 3) {
+        categoryUl.append(todoMaker(todo));
+      }
+    }
     countTodos();
-    // TODO: if there is less than 3 todos render the todo to the category
   }
 
   // TODO: make a function that will remove the click handlers to submit PUT /todos/:todoId/category
@@ -137,47 +259,36 @@ $(function(){
     }
   }
 
-  var text = $('#what-todo-box');
-  $('#what-todo-box').on('submit', function (event) {
-      event.preventDefault();
-
-      if(validateForm(text)) {
-        $.ajax({
-          method: 'POST',
-          url:'/todos',
-          data: text.val().serialize(),
-// TODO: on route we need to send back down a todo obj with a property of .conflict set to either false or true if could not choose cat
-          success: function(todo){ 
-            addedTodo(todo);
-            text.val('');
-          }
-        });
-      }
-  });
-
 /******************************************************************************/
 /*********************** Render the dif pages *********************************/
 /******************************************************************************/
-
+// catSection is defined up the top
   // make a function that will remove the click handlers to expand to single category mode on all of the categories
-  function renderSelectCategoryPage(event) {
-    const catSection = $(".categories section");
+  function renderSelectCategoryPage(todoId) {
     catSection.off();
     catSection.find("ul").html("");
-    catSection.on("click", updateCategory);
+    catSection.on("click", (event) => {
+      const catId = $(this).getAttr("data-id");
+      updateCategory(catId, todoId, errorFlasher, rerenderTodo(todoId));
+    });
   }
 
   function renderCategoryFocusPage(event) {
-    const catSection = $(".categories section");
     $(this).off("click", renderCategoryFocusPage);
     // TODO: add / remove the classes that make it a single category page
     // TODO: maybe have a button to renderAllCategories again
   }
 
+  // main category page renderer
   function renderAllCategories(event) {
-    const catSection = $(".categories section");
     catSection.off();
-
+    getAllTodosAndCategories((err) => {
+      errorFlash.text(err.error);
+    }, (data) => {
+      // TODO: this may cause a flicker
+        $(".categories ul").empty();
+        todoLooper(data.todos);
+    });
     catSection.on("click", renderCategoryFocus);
   }
 
