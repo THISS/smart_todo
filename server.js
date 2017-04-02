@@ -21,7 +21,7 @@ const databaseHelpers = require("./database/database_helpers")(knex);
 
 
 app.set("view engine", "ejs");
-app.use(express.static("public"));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: "session",
@@ -40,14 +40,14 @@ if(ENV === "development") {
 
   // Log knex SQL queries to STDOUT as well
   app.use(knexLogger(knex));
-  app.use("/styles", sass({
-    src: __dirname + "/styles",
-    dest: __dirname + "/public/styles",
+  app.use(sass({
+    src: __dirname,
+    dest: __dirname + "/public/",
     debug: true,
     outputStyle: 'expanded'
   }));
 }
-
+app.use(express.static("public"));
 // Mount all resource routes
 app.use("/users", usersRoutes(knex, helperFunctions));
 app.use("/todos", todosRoutes(databaseHelpers, helperFunctions));

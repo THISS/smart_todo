@@ -27,11 +27,26 @@
           </div>
     </nav>
   </header>
-
-  <main class="section">
-      <section class="boards">
-      <%include partials/_not-signed-in %>
-        <div class="columns">
+  <main>
+      <section class="columns categories">
+              
+          <section class="column is-3 box cat-column">
+            <section data-id="1">
+              <header>
+                <h3 class="category-title">category title</h3>
+                <h3 class="count">number</h3>
+              </header>
+              <ul class="box">
+                <li data-id="1" data-rank="1">
+                  <input type="checkbox" class="todo-check"/>
+                  <label class="check_item"> todo title </label>
+                  <button class="edit"><i class="fa fa-pencil-square-o"></i></button>
+                  <button class="trash"><i class="fa fa-trash-o"></i></button>
+                </li>
+              </ul>
+            </section>
+            </div>
+          </section>
 
           <div class="column is-3 board" id="b1">
             <div class="box is-gray">
@@ -41,115 +56,16 @@
               </div>
               <div class="items">
                 <ul class="box" id="b1c1">
-                  <li><label><input type="checkbox"/>test item</label></li>
+                  <li><label><input type="checkbox"/> test item</label></li>
                   <button class="edit"><i class="fa fa-pencil-square-o"></i></button>
                   <button class="trash"><i class="fa fa-trash-o"></i></button>
                 </ul>
-                <div class="add-card">
-                 <div onclick="addCard(this)">
-                  <i class="fa fa-plus-circle"></i>
-                  Add item
-                </div>
-              </div>
             </div>
           </div>
         </div>
-
-
-        <div class="column is-3 board" id="b2">
-            <div class="box is-gray">
-              <div class="head">
-                <div class="name">Eat</div>
-                <div class="count">1</div>
-              </div>
-              <div class="items">
-                <ul class="box" id="b1c1">
-                  <li><label><input type="checkbox"/>test item</label></li>
-                  <button class="edit"><i class="fa fa-pencil-square-o"></i></button>
-                  <button class="trash"><i class="fa fa-trash-o"></i></button>
-                </ul>
-                <div class="add-card">
-                 <div onclick="addCard(this)">
-                  <i class="fa fa-plus-circle"></i>
-                  Add item
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="block">
-       <a class="button eatsm">Eat</a>
-       <a class="button watchsm">Watch</a>
-        <a class="button buysm">Buy</a>
-        <a class="button readsm">Read</a>
-       </div>
-
-          <div class="column is-3 board" id="b2">
-            <div class="box is-gray">
-              <div class="head">
-                <div class="name">Eat</div>
-                <div class="count">1</div>
-                <span class="options"><i class="fa fa-ellipsis-h"></i></span>
-              </div>
-              <div class="items">
-                <div class="box" id="b2c1">
-                  <p class="title">test item</p>
-                </div>
-                <div class="add-card">
-                 <div onclick="addCard(this)">
-                  <i class="fa fa-plus-circle"></i>
-                  Add item
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-          <div class="column is-3 board" id="b3">
-            <div class="box is-gray">
-              <div class="head">
-                <div class="name">Buy</div>
-                <div class="count">1</div>
-                <div class="options"><i class="fa fa-ellipsis-h"></i></div>
-              </div>
-              <div class="items">
-                <div class="box" id="b3c1">
-                  <p class="title">test item</p>
-                </div>
-                <div class="add-card">
-                 <div onclick="addCard(this)">
-                  <i class="fa fa-plus-circle"></i>
-                  Add item
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-          <div class="column is-3 board" id="b4">
-            <div class="box is-gray">
-              <div class="head">
-                <div class="name">Read</div>
-                <div class="count">1</div>
-                <div class="options"><i class="fa fa-ellipsis-h"></i></div>
-              <div class="items">
-                <div class="box" id="b4c1">
-                  <p class="title">test item</p>
-                </div>
-                <div class="add-card">
-                 <div onclick="addCard(this)">
-                  <i class="fa fa-plus-circle"></i>
-                  Add item
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+        
     </section>
-</main>
+  </main>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
   <script type="text/javascript" src="/scripts/bulma.js"></script>
   <script type="text/javascript" src="/scripts/boards.js"></script>

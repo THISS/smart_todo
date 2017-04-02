@@ -6,7 +6,7 @@ body {
   padding: 40px 0;
 }
 
-.boards .board .box.is-gray {
+.box.is-gray {
   background-color: #6fde96;
 }
 
@@ -15,7 +15,7 @@ body {
   font-size: large;
 }
 
-.boards .box:hover {
+.box:hover {
   background-color: #b5b5b5;
 }
 
@@ -47,4 +47,30 @@ body {
 
 .box {
   padding: 0.5rem;
+  margin: 0.1rem;
+}
+
+.todo-check:checked + .check_item {
+  text-decoration: line-through;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.cat-column {
+  background-color: #6fde96;
+}
+
+.category-title {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+  color: #2C2C30;
+}
+
+header .count {
+  float: right;
+  padding-left: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #AAAAAA;
 }
