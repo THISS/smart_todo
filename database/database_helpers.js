@@ -70,6 +70,14 @@ module.exports = (db) => {
   function selectAllCategories() {
     return db("categories").select("*").orderBy("id");
   }
+
+  function autoCategorise (list) {
+    return db("keywords").select("category_id")
+    .whereIn("word", list)
+    .count("id as hits")
+    .groupBy("category_id")
+    .orderBy("hits", "desc");
+  }
   
   // Return our module exports object with the functions mapped to their names
   return {
@@ -79,6 +87,7 @@ module.exports = (db) => {
     multiRankUpdate: multiRankUpdate,
     createTodo: createTodo,
     selectATodo: selectATodo,
+    autoCategorise: autoCategorise,
     selectAllCategories: selectAllCategories
   };
 
