@@ -90,10 +90,11 @@ module.exports = (dbHelpers, helperFuncs) =>{
     });
   });
 
-  router.put("/:todoid/checked", (req, res) => {
+  router.put("/:todoid/completed", (req, res) => {
     // Is user logged in
     helperFuncs.isUserLoggedIn(req, res);
-    dbHelpers.updateTodo({completed: true}, req.params.todoid)
+    const completed = req.body.completed;
+    dbHelpers.updateTodo({completed: completed}, req.params.todoid)
     .then((results) => {
       res.json(results);
     }).catch((err) => {
