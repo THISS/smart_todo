@@ -59,7 +59,7 @@ module.exports = (db) => {
         deleted: false,
         category_id: category_id,
         user_id: user_id
-      });
+      }).returning(["id", "rank", "title", "completed", "category_id"]);
     })
     .catch((err) => {
       return Promise.reject(err);

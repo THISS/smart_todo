@@ -12,8 +12,15 @@ function randomId() {
   return Math.ceil(Math.random() * 100);
 }
 
-
+function firstTwoMatch(rowsArr) {
+  if(!rowsArr[1]) return false;
+  if (rowsArr[0].hits === rowsArr[1].hits) {
+    return true;
+  }
+  return false;
+}
 module.exports = {
   isUserLoggedIn: isUserLoggedIn,
-  randomId: randomId
+  randomId: randomId,
+  firstTwoMatch: firstTwoMatch
 };
