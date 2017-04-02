@@ -61,6 +61,8 @@ body {
 }
 
 .category-title {
+  position: relative;
+  left:35%;
   display: inline-block;
   font-size: 20px;
   font-weight: bold;
@@ -68,7 +70,7 @@ body {
 }
 
 header .count {
-  float: right;
+  float: left;
   padding-left: 5px;
   font-size: 20px;
   font-weight: bold;
