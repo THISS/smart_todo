@@ -149,12 +149,11 @@ $(function(){
   }
 
   // Insert a new todo
-  function insertTodo(errCb, successCb) {
+  function insertTodo(title ,errCb, successCb) {
     $.ajax({
       method: 'POST',
       url:'/todos',
-      data: whatTodoBox.closest("form").serialize(),
-  // TODO: on route we need to send back down a todo obj with a property of .conflict set to either false or true if could not choose cat
+      data: title,     
       success: successCb,
       fail: errCb
     });
@@ -168,7 +167,8 @@ $(function(){
       event.preventDefault();
 
       if(validateForm(whatTodoBox)) {
-        insertTodo(errorFlasher, addedTodo);
+        const title = whatTodoBox.val();
+        insertTodo(title, errorFlasher, addedTodo);
       }
       else{
         console.log("Validation failed");
@@ -177,6 +177,17 @@ $(function(){
 
   categories.on("click", "section", renderCategoryFocusPage);
 
+  // TODO: Checkbox completed handler
+
+  // TODO: Delete Button handler
+
+  // TODO: Edit Button handler
+
+  // TODO: Save Edit Button handler
+
+  // TODO: Change Category Button handler
+
+  // TODO: Change Ranks handler
 
 /******************************************************************************/
 /*********************** Our helper functions *********************************/
@@ -186,17 +197,9 @@ $(function(){
   function rerenderTodo(todoId) {
     // use jQuery remove before populating again - making a get /todos/:todoId
     getATodo(todoId, errorFlasher, (todo) => {
-      categoryObj[todo.category_id].find(`ul[data-id="${todo.id}"]`).replaceWith(todoMaker(todo));
-    });
-  }
-
-  // make a function that gets todos and categories and is the controller for the start
-  function startController(){
-    getAllTodosAndCategories(errorFlasher, (data) => {
-        categoryLooper(data.categories);
-        populateCategoryObj(data.categories);
-        catSection = categories.find("section");
-        todoLooper(data.todos);
+      categoryObj[todo.category_id].find(`li[data-id="${todo.id}"]`).replaceWith(todoMaker(todo));
+      // TODO: This might cause problems
+      catSection.find("ul").slideDown();
     });
   }
 
@@ -237,6 +240,11 @@ $(function(){
   }
 
   // TODO: make a function that will remove the click handlers to submit PUT /todos/:todoId/category
+  function updateThisTodoCategory(todoId, category_id) {
+    const updateCatObj = {category_id: category_id};
+
+    
+  }
   // TODO: and then does an ajax call to PUT /todos/:todoId/category passing the category_id in the body which on success will:
   // TODO:  - add the todos to the categories by calling todoLooper()
   // TODO: and then adds a click handler to expand to single category mode on all of the categories
@@ -246,12 +254,16 @@ $(function(){
 /******************************************************************************/
 
   function validateForm(text) {
-    if ($.trim(text.val()).length === 0) {
+    const parsed = $.trim(text.val());
+    if (parsed.length === 0) {
       // TODO: Change to a pretty flash message
       alert ("Can not sumbit an empty item");
       return false;
+    }else if (parsed.val().length < 3) {
+      alert ("Try a little harder at making a todo");
+      return false;
     }
-    else if (text.val().length > 127 ) {
+    else if (parsed.val().length > 127 ) {
       // TODO: Change to a pretty flash message
       alert ("Exceeded character limit of 127");
       return false;
@@ -265,30 +277,52 @@ $(function(){
 /*********************** Render the dif pages *********************************/
 /******************************************************************************/
 // catSection is defined up the top
-  // make a function that will remove the click handlers to expand to single category mode on all of the categories
+  // This will render the categories as buttons 
+  // and the main form as disabled
   function renderSelectCategoryPage(todoId) {
     catSection.off();
-    catSection.find("ul").html("");
+    // TODO: This might cause problems
+    catSection.find("ul").slideUp();
     catSection.on("click", (event) => {
       const catId = $(this).getAttr("data-id");
       updateCategory(catId, todoId, errorFlasher, rerenderTodo(todoId));
+      catSection.off();
+      catSection.on("click", (event) => {
+
+      });
     });
   }
 
+  // This will render a category in focus
   function renderCategoryFocusPage(event) {
-    $(this).off("click", renderCategoryFocusPage);
-    // TODO: add / remove the classes that make it a single category page
-    // TODO: maybe have a button to renderAllCategories again
+    const that = $(this);
+    // remove all of the elements with class x
+    catSection.each((key, val) => {
+      // TODO: take the class and remove it
+      val.removeClass();
+    });
+    // TODO: add the class here
+    that.addClass();
+    $(document).on("click", (event) => {
+      if(!$(event.target).closest("cat-column").length) {
+        // TODO: need to remove the class
+        that.removeClass();
+      }
+    });
   }
+
+  // TODO: on form focus the render all categories must be called
 
   // main category page renderer
   function renderAllCategories(event) {
+    // TODO: may cause problems
+    $(document).off("click");
     catSection.off();
     getAllTodosAndCategories((err) => {
       errorFlash.text(err.error);
     }, (data) => {
-      // TODO: this may cause a flicker
-        $(".categories ul").empty();
+        // TODO: this may cause a flicker
+        catSection.find("ul").empty();
         todoLooper(data.todos);
     });
     catSection.on("click", renderCategoryFocus);
@@ -298,6 +332,14 @@ $(function(){
 /*********************** When ready call this *********************************/
 /******************************************************************************/
 
+  // make a function that gets todos and categories and is the controller for the start
+  function startController(){
+    getAllTodosAndCategories(errorFlasher, (data) => {
+        categoryLooper(data.categories);
+        populateCategoryObj(data.categories);
+        catSection = categories.find("section");
+        renderAllCategories();
+    });
+  }
   startController();
-
 });
