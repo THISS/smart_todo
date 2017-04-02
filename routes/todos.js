@@ -8,7 +8,10 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.get("/", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
     Promise.all([
       dbHelpers.selectAllTodo(req.session.user_id),
       dbHelpers.selectAllCategories()
@@ -23,8 +26,11 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.get("/category/:catid", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
-    dbHelpers.selectCatTodo(req.session.user_id, req.params.catid)
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
+    dbHelpers.selectCatTodo(req.session.user_id, Number(req.params.catid))
     .then((results) => {
       res.json(results);
       return;
@@ -36,7 +42,7 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.get("/:todoid", (req, res) => {
     helperFuncs.isUserLoggedIn(req, res);
-    dbHelpers.selectATodo(req.params.todoid)
+    dbHelpers.selectATodo(Number(req.params.todoid))
     .then((results) => {
       console.log(results[0]);
       res.json(results[0]);
@@ -50,7 +56,10 @@ module.exports = (dbHelpers, helperFuncs) =>{
   // our post / put route
   router.post("/", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
     const titleVar = req.body.todo;
     let conflict = false;
     // cat id 5 is other
@@ -90,7 +99,10 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.put("/rankupdate", (req,res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
     // const newRanks = [{id:1, rank:2}, {id:2, rank:1}];
     const newRanks = req.body.new_ranks;
     dbHelpers.multiRankUpdate(newRanks)
@@ -105,9 +117,11 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.put("/:todoid/category", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
-    const catID = req.body.cat_id;
-    dbHelpers.updateTodo({category_id: catID}, req.params.todoid)
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
+    dbHelpers.updateTodo({category_id: req.body.category_id}, req.params.todoid)
     .then((results) => {
       res.json(results);
       return;
@@ -119,7 +133,10 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.put("/:todoid/title", (req,res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
 
     const titleVar = req.body.title;
     dbHelpers.updateTodo({title: titleVar}, req.params.todoid)
@@ -134,7 +151,10 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.put("/:todoid/completed", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
     const completed = req.body.completed;
     dbHelpers.updateTodo({completed: completed}, req.params.todoid)
     .then((results) => {
@@ -148,7 +168,11 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.delete("/:todoid", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
+
     dbHelpers.updateTodo({deleted: true}, req.params.todoid)
     .then((results) => {
       res.json(results);
