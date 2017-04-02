@@ -21,6 +21,15 @@ module.exports = (db) => {
     .orderBy("rank");
   };
 
+  // function to select a todo
+  function selectATodo(todo_id) {
+    return db("todos").select("id", "rank", "title", "completed", "category_id")
+    .where({
+      deleted: false,
+      id: todo_id
+    });
+  }
+
 //function to update todo columns
   function updateTodo(updateColumn, todoID) {
     return db("todos").where({id: todoID, deleted: false})
@@ -69,6 +78,7 @@ module.exports = (db) => {
     updateTodo: updateTodo,
     multiRankUpdate: multiRankUpdate,
     createTodo: createTodo,
+    selectATodo: selectATodo,
     selectAllCategories: selectAllCategories
   };
 

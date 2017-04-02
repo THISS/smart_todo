@@ -32,6 +32,19 @@ module.exports = (dbHelpers, helperFuncs) =>{
     });
   });
 
+  router.get("/:todoid", (req, res) => {
+    helperFuncs.isUserLoggedIn(req, res);
+    dbHelpers.selectATodo(req.params.todoid)
+    .then((results) => {
+      console.log(results[0]);
+      res.json(results[0]);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(dbError);
+    });
+  });
+
 //used 1 as user_id hardcoded
   router.post("/", (req, res) => {
     // Is user logged in
