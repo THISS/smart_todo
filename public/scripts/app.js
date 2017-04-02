@@ -153,7 +153,7 @@ $(function(){
     $.ajax({
       method: 'POST',
       url:'/todos',
-      data: whatTodoBox.val().serialize(),
+      data: whatTodoBox.closest("form").serialize(),
   // TODO: on route we need to send back down a todo obj with a property of .conflict set to either false or true if could not choose cat
       success: successCb,
       fail: errCb
@@ -164,15 +164,18 @@ $(function(){
 /******************************************************************************/
 
   // When someone submits a todo 
-  whatTodoBox.on('submit', function (event) {
+  whatTodoBox.closest("form").on("submit", function (event) {
       event.preventDefault();
 
       if(validateForm(whatTodoBox)) {
         insertTodo(errorFlasher, addedTodo);
       }
+      else{
+        console.log("Validation failed");
+      }
   });
 
-  categories.on("click", "section", renderCategoryFocus);
+  categories.on("click", "section", renderCategoryFocusPage);
 
 
 /******************************************************************************/
@@ -180,7 +183,6 @@ $(function(){
 /******************************************************************************/
 
   // On update rerender the todo
-  // TODO:
   function rerenderTodo(todoId) {
     // use jQuery remove before populating again - making a get /todos/:todoId
     getATodo(todoId, errorFlasher, (todo) => {
