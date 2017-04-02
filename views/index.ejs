@@ -29,23 +29,33 @@
   </header>
   <main>
       <section class="columns is-desktop categories">
-              
+
+          <script type="x-handlebarsjs-stuff" id="category-html">
+
           <section class="column is-3 box cat-column">
-            <section data-id="1">
+            <section data-id="{{id}}">
               <header>
-                <h3 class="category-title">To Watch</h3>
-                <h3 class="count">1</h3>
+                <h3 class="category-title">{{name}}</h3>
+                <h3 class="count cat-number">0</h3>
               </header>
-              <ul class="box">
-                <li data-id="1" data-rank="1">
-                  <input type="checkbox" class="todo-check"/>
-                  <label class="check_item"> todo title </label>
-                  <button class="edit"><i class="fa fa-pencil-square-o"></i></button>
-                  <button class="trash"><i class="fa fa-trash-o"></i></button>
-                </li>
+              <ul class="box todo-wrapper">
+                
               </ul>
             </section>
           </section>
+
+          </script>
+
+          <script type="x-handlebarsjs" id="todo-html">
+                <li data-id="{{id}}" data-rank="{{rank}}">
+                  <label class="check_item"> 
+                    <input type="checkbox" {{#if completed}} checked {{/if}}class="todo-check"/>
+                    {{title}} 
+                  </label>
+                  <button class="edit"><i class="fa fa-pencil-square-o"></i></button>
+                  <button class="trash"><i class="fa fa-trash-o"></i></button>
+                </li>
+          </script>
 
           <section class="column is-3 box cat-column">
             <section data-id="2">

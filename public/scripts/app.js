@@ -9,8 +9,10 @@ $(function(){
 
   // Handlebars Joy
   // TODO: update the source html to a jQuery .html() of the script tags on the index
-  const sourceTodoHtml = `<li data-id="{{id}}" data-rank="{{rank}}"><label><input type="checkbox" {{#if completed}}checked {{/if}} >{{title}}</label></li>`;
-  const sourceCatHtml = `<section data-id="{{id}}"><header><h3>{{name}}</h3><h3 class="cat-number"></h3></header><ul class="todo-wrapper"></ul></section>`;
+  // const sourceTodoHtml = `<li data-id="{{id}}" data-rank="{{rank}}"><label><input type="checkbox" {{#if completed}}checked {{/if}} >{{title}}</label></li>`;
+  // const sourceCatHtml = `<section data-id="{{id}}"><header><h3>{{name}}</h3><h3 class="cat-number"></h3></header><ul class="todo-wrapper"></ul></section>`;
+  const sourceTodoHtml = $("#todo-html").html();
+  const sourceCatHtml = $("#category-html").html();
   const templateTodo = Handlebars.compile(sourceTodoHtml);
   const templateCat = Handlebars.compile(sourceCatHtml);
 
