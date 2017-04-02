@@ -62,6 +62,7 @@ body {
 }
 
 .category-title {
+  position: relative;
   display: inline-block;
   font-size: 20px;
   font-weight: bold;
