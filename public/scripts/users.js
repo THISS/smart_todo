@@ -1,27 +1,38 @@
 $(function () {
-	var logButton = $("header nav button");
+	const loginBtn = $("button.login");
+	const errorFlash = $(".error-flash");
 
-	logButton.click(function() {
-			$.ajax ({
-				url: "/users/login",
-				method: GET,
-				success: function(data) {
-					if(data.loggedIn) {   
-						logButton.text("logout");
-					}
+	function login(button) {
+		$.ajax ({
+			url: "/users/login",
+			method: "GET",
+			success: function(data) {
+				button.text("Logout");
+			},
+			fail: function(error) {
+				errorFlash.text(error.error);
 			}
 		});
-	});
+	}
 
-	logButton.click(function() {
-			$.ajax ({
-				url: "/users/logout",
-				method: GET,
-				success: function(data) {
-					if(data.loggedIn) {   
-						logButton.text("login");
-					}
+	function logout(button) {
+		$.ajax ({
+			url: "/users/logout",
+			method: "GET",
+			success: function(data) {
+				button.text("Login")
+			},
+			fail: function(err) {
+				errorFlash.text(error.error);
 			}
 		});
+  }
+
+	loginBtn.on("click", function(event) {
+		if(loginBtn.text() === "Login") {
+			login(loginBtn);
+		}else {
+			logout(loginBtn);
+		}
 	});
 });

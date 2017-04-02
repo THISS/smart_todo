@@ -8,13 +8,17 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.get("/", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
     Promise.all([
       dbHelpers.selectAllTodo(req.session.user_id),
       dbHelpers.selectAllCategories()
     ]).then((resArr) => {
       const responseObj = {todos: resArr[0], categories: resArr[1]};
       res.json(responseObj);
+      return;
     }).catch((err) => {
       res.status(500).json(dbError)
     });
@@ -22,41 +26,89 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.get("/category/:catid", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
-    dbHelpers.selectCatTodo(req.session.user_id, req.params.catid)
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
+    dbHelpers.selectCatTodo(req.session.user_id, Number(req.params.catid))
     .then((results) => {
       res.json(results);
+      return;
     }).catch((err) => {
       console.log(err);
       res.status(500).json(dbError)
     });
   });
 
-//used 1 as user_id hardcoded
+  router.get("/:todoid", (req, res) => {
+    helperFuncs.isUserLoggedIn(req, res);
+    dbHelpers.selectATodo(Number(req.params.todoid))
+    .then((results) => {
+      console.log(results[0]);
+      res.json(results[0]);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(dbError);
+    });
+  });
+
+  // our post / put route
   router.post("/", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
+    const titleVar = req.body.todo;
+    let conflict = false;
+    // cat id 5 is other
+    let catID = 5;
 
-    const catID = req.body.cat_id;
-    const titleVar = req.body.title;
-
-    dbHelpers.createTodo(req.session.user_id, catID, titleVar)
+    // reduce our array of words to get rid of 2 letter words before passing it to the db
+    const listFiltered = titleVar.length > 2 ? titleVar.toLowerCase().split(" ").filter(word => {return word.length > 2}) : false;
+    if(listFiltered === false) {
+      return res.status(409).json({error: "Your first todo is to learn how to make a TODO"});
+    }
+    // first phase is to see what category we are
+    // select "category_id" where word in titleVar.split(" ");
+    console.log(listFiltered);
+    dbHelpers.autoCategorise(listFiltered)
+    .then((rowsOfCategoryIds) => {
+      console.log(rowsOfCategoryIds);
+      if(rowsOfCategoryIds.length < 1) {
+        conflict = true;
+      }else if (helperFuncs.firstTwoMatch(rowsOfCategoryIds)){
+        conflict = true;
+      }else {
+        catID = rowsOfCategoryIds[0].category_id;
+      }
+      // continue with the creating the todo
+      return dbHelpers.createTodo(req.session.user_id, catID, titleVar);
+    })
     .then((results) => {
-      res.json(results);
+      // results is getting all of the fields one would get from a single todo plus a conflict property
+      // indicating that we should get the user to update the category
+      results[0].conflict = conflict;
+      return res.json(results[0]);
     }).catch((err) => {
       console.log(err);
       res.status(500).json(dbError)
     });
   });
 
-  router.put("/categoryupdate", (req,res) => {
+  router.put("/rankupdate", (req,res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
     // const newRanks = [{id:1, rank:2}, {id:2, rank:1}];
     const newRanks = req.body.new_ranks;
     dbHelpers.multiRankUpdate(newRanks)
     .then((results) => {
       res.json(results);
+      return;
     }).catch((err) => {
       console.log(err);
       res.status(500).json(dbError)
@@ -65,11 +117,14 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.put("/:todoid/category", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
-    const catID = req.body.cat_id;
-    dbHelpers.updateTodo({category_id: catID}, req.params.todoid)
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
+    dbHelpers.updateTodo({category_id: req.body.category_id}, req.params.todoid)
     .then((results) => {
       res.json(results);
+      return;
     }).catch((err) => {
       console.log(err);
       res.status(500).json(dbError)
@@ -78,24 +133,33 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.put("/:todoid/title", (req,res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
 
     const titleVar = req.body.title;
     dbHelpers.updateTodo({title: titleVar}, req.params.todoid)
     .then((results) => {
       res.json(results);
+      return;
     }).catch((err) => {
       console.log(err);
       res.status(500).json(dbError)
     });
   });
 
-  router.put("/:todoid/checked", (req, res) => {
+  router.put("/:todoid/completed", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
-    dbHelpers.updateTodo({completed: true}, req.params.todoid)
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
+    const completed = req.body.completed;
+    dbHelpers.updateTodo({completed: completed}, req.params.todoid)
     .then((results) => {
       res.json(results);
+      return;
     }).catch((err) => {
       console.log(err);
       res.status(500).json(dbError)
@@ -104,10 +168,15 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
   router.delete("/:todoid", (req, res) => {
     // Is user logged in
-    helperFuncs.isUserLoggedIn(req, res);
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
+
     dbHelpers.updateTodo({deleted: true}, req.params.todoid)
     .then((results) => {
       res.json(results);
+      return;
     }).catch((err) => {
       console.log(err);
       res.status(500).json(dbError)
