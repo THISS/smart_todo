@@ -23,6 +23,7 @@ const databaseHelpers = require("./database/database_helpers")(knex);
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(cookieSession({
   name: "session",
   keys: process.env.SECRET || ["development", "fun"]
