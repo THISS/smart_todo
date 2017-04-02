@@ -10,34 +10,8 @@ body {
   background-color: #6fde96;
 }
 
-.boards .board .box .items {
-  padding: 20px 0;
-  font-size: large;
-}
 .box:hover {
   background-color: #b5b5b5;
-}
-
-.box .head .name {
-  display: inline-block;
-  font-size: 20px;
-  font-weight: bold;
-  color: #2C2C30;
-}
-
-.box .head .count {
-  float: right;
-  padding-left: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #AAAAAA;
-}
-
-.box .head .options {
-  display: inline-block;
-  float: right;
-  padding-top:7px;
-  color: #2C2C30;
 }
 
 .items .box .title {
@@ -83,4 +57,21 @@ main .columns {
 
 .box:last-child {
   margin-bottom: 1.5rem;
+}
+
+.category-button:active{
+  display:flex;
+  flex-wrap:wrap;
+
+  header .count{
+    display:none;
+  }
+  .box{
+    display:none;
+  }
+  .columns .column header{
+    justify-content:center;
+    align-items: center;
+  }
+
 }
