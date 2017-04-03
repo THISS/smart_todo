@@ -29,6 +29,10 @@ app.use(cookieSession({
   keys: process.env.SECRET || ["development", "fun"]
 }));
 app.use(flash());
+app.use((req, res, next) => {
+  res.locals.loggedIn = !!req.session.user_id;
+  next();
+});
 
 if(ENV === "development") {
   const sass        = require("node-sass-middleware");

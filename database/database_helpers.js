@@ -33,7 +33,8 @@ module.exports = (db) => {
 //function to update todo columns
   function updateTodo(updateColumn, todoID) {
     return db("todos").where({id: todoID, deleted: false})
-    .update(updateColumn);
+    .update(updateColumn)
+    .returning(["id", "rank", "title", "completed", "category_id"]);
   };
 
 //functin to update rankings of todo list
