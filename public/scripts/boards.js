@@ -1,3 +1,4 @@
+$(function(){
 function addCard(e) {
     var el = e;
     var category = el.parentElement.parentElement.parentElement.parentElement.id;
@@ -25,3 +26,8 @@ $('.todo-close').on('click', function() {
 $('.todo-add').on('click', function() {
   $('.what-todo-box-bg').removeClass('active')
 })
+
+
+
+});
+

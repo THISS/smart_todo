@@ -6,14 +6,6 @@ body {
   padding:40px 0;
 }
 
-.box.is-gray {
-  background-color: #6fde96;
-}
-
-.box:hover {
-  background-color: #b5b5b5;
-}
-
 .items .box .title {
   font-size: 19px;
 }
@@ -23,15 +15,46 @@ body {
   margin: 0.1rem;
 }
 
+.box .post:hover {
+  background-color: #b5b5b5;
+  .ed-buttons{
+    display:block;
+  }
+}
+
+.edit:hover{
+  background-color: #b5b5b5;
+  .change-save{
+    display:block;
+  }
+}
+
+.ed-buttons{
+  display: none;
+}
+
+.change-save{
+  display: none;
+}
+
+.deleter-flash{
+  display:none;
+}
+
+.deleter-active{
+  display:block;
+}
+
 .todo-check:checked + .check_item {
  text-decoration:line-through;
  opacity: 0.5;
  z-index: 0;
 }
 
-.column.is-3 {
+.column.is-3{
   background-color: #6fde96;
   flex: auto;
+  display:inline-block;
 }
 
 .category-title {
@@ -59,6 +82,10 @@ main .columns {
   margin-bottom: 1.5rem;
 }
 
+.box .post{
+  margin-bottom:0.5em;
+}
+
 .category-button:active{
   display:flex;
   flex-wrap:wrap;
@@ -66,7 +93,7 @@ main .columns {
   header .count{
     display:none;
   }
-  .box{
+  .box .post{
     display:none;
   }
   .columns .column header{
