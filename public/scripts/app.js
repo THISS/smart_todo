@@ -140,7 +140,7 @@ $(function(){
   }
 
   // Change the ranks in a category
-  // TODO: need to pass in an array of objects in the form {id: todoId, rank: newRank}
+  // need to pass in an array of objects in the form {id: todoId, rank: newRank}
   function updateRanks(todoRanksObj, errCb, successCb) {
     $.ajax({
       method: 'PUT',
@@ -208,11 +208,19 @@ $(function(){
 
 function initRankSort() {
   // create a loop for the categories ul - going to add an id attribute to them
+  const arrayOfCatIds = [];
+
   catSection.each(function() {
-    const catId = $(this).attr("data-id");
-    $(this).find("ul").attr("id", "cat-sort-" + catId);
-    const list = document.getElementById("cat-sort-" + catId);
-    Sortable.create(list, {
+    const catId = $(this).find("section").attr("data-id");
+    const ulId = `cat-sort-${catId}`;
+    $(this).find("ul").attr("id", ulId);
+    arrayOfCatIds.push(ulId);
+  });
+
+  arrayOfCatIds.forEach((ulId) => {
+    const list = document.getElementById(ulId);
+    console.log(list);
+    new Sortable.create(list, {
       animation: 200,
       store: {
         get: function(){},
@@ -223,7 +231,14 @@ function initRankSort() {
 }
 // create a sortable handler for when set is called
 function handleRankSorting(sortable) {
-  console.log(sortable);
+  const newRanks = sortable.toArray().map((value, index) => {
+    return {
+      id: value,
+      rank: index + 1
+    };
+  });
+  const objArr = {new_ranks: newRanks};
+  updateRanks(objArr, errorFlasher, ()=>{console.log("new ranks saved")});
 }
 /******************************************************************************/
 /*********************** handlers for updates *********************************/
