@@ -7,6 +7,7 @@ module.exports = (db) => {
   function selectAllTodo(user_id) {
     return db("todos").select("id", "rank", "title", "completed", "category_id")
     .where({user_id: user_id, deleted: false})
+    .orderBy("completed")
     .orderBy("rank");
   };
 

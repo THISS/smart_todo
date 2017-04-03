@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>todo list</title>
+  <title>smartTODO</title>
+  <link rel="icon" href="/favicon.png" type="image/x-icon"/>
+  <link rel="shortcut icon" href="/favicon.png" type="image/x-icon"/>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.0/css/bulma.min.css"/>
   <link rel="stylesheet" type="text/css" href="/styles/boards.css">
@@ -48,8 +49,7 @@
                 <h3 class="category-title">{{name}}</h3>
                 <h3 class="count cat-number">0</h3>
               </header>
-              <ul class="todo-wrapper">
-
+              <ul class="todo-wrapper" id="catsort{{id}}">
               </ul>
             </section>
           </section>
@@ -131,7 +131,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.js"></script>
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.5.1/Sortable.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
   <script type="text/javascript" src="/scripts/bulma.js"></script>
   <script type="text/javascript" src="/scripts/boards.js"></script>
   <script type="text/javascript" src="/scripts/users.js"></script>
