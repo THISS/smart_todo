@@ -80,6 +80,13 @@ module.exports = (db) => {
     .orderBy("hits", "desc");
   }
   
+  function getMaxRank(userId, catId) {
+    return db("todos").max("rank").where({
+        user_id: userId,
+        category_id: catId
+    })
+  }
+
   // Return our module exports object with the functions mapped to their names
   return {
     selectAllTodo: selectAllTodo,
@@ -89,6 +96,7 @@ module.exports = (db) => {
     createTodo: createTodo,
     selectATodo: selectATodo,
     autoCategorise: autoCategorise,
+    getMaxRank: getMaxRank,
     selectAllCategories: selectAllCategories
   };
 

@@ -128,10 +128,7 @@ module.exports = (dbHelpers, helperFuncs) =>{
     const catId = req.body.category_id;
     const userId = req.params.todoid;
 
-    db("todos").max("rank").where({
-        user_id: userId,
-        category_id: catId
-    })
+    dbHelpers.getMaxRank(userId, catId)
     .then((rows) => {
       const newRank = rows[0].max ? rows[0].max + 1 : 1;
       return dbHelpers.updateTodo({category_id: catId, rank: newRank}, userId)
