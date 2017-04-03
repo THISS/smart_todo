@@ -23,7 +23,7 @@
             </div>
           </div>
           <div class="column is-one-quarter">
-               <button class="login" type="button">Login</button>
+               <button class="login" type="button"><% if (loggedIn) { %>Logout<% }else { %>Login<% } %></button>
           </div>
     </nav>
   </header>
