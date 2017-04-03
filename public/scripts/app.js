@@ -201,6 +201,30 @@ $(function(){
 
   // TODO: Change Ranks handler
 
+
+/******************************************************************************/
+/*********************** Sortable for rank sort *******************************/
+/******************************************************************************/
+
+function initRankSort() {
+  // create a loop for the categories ul - going to add an id attribute to them
+  catSection.each(function() {
+    const catId = $(this).attr("data-id");
+    $(this).find("ul").attr("id", "cat-sort-" + catId);
+    const list = document.getElementById("cat-sort-" + catId);
+    Sortable.create(list, {
+      animation: 200,
+      store: {
+        get: function(){},
+        set: handleRankSorting 
+      }
+    });
+  });
+}
+// create a sortable handler for when set is called
+function handleRankSorting(sortable) {
+  console.log(sortable);
+}
 /******************************************************************************/
 /*********************** handlers for updates *********************************/
 /******************************************************************************/
@@ -315,16 +339,6 @@ $(function(){
     countTodos();
   }
 
-  // TODO: make a function that will remove the click handlers to submit PUT /todos/:todoId/category
-  function updateThisTodoCategory(todoId, category_id) {
-    const updateCatObj = {category_id: category_id};
-
-    
-  }
-  // TODO: and then does an ajax call to PUT /todos/:todoId/category passing the category_id in the body which on success will:
-  // TODO:  - add the todos to the categories by calling todoLooper()
-  // TODO: and then adds a click handler to expand to single category mode on all of the categories
-
 /******************************************************************************/
 /*********************** Form submitting todo *********************************/
 /******************************************************************************/
@@ -413,6 +427,7 @@ $(function(){
         populateCategoryObj(data.categories);
         catSection = categories.find(".cat-column");
         renderAllCategories();
+        initRankSort();
         // TODO: remove class on #what-todo-box
     });
   }
