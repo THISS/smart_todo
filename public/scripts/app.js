@@ -164,43 +164,43 @@ $(function(){
 /******************************************************************************/
 /*********************** Set Events to Watch **********************************/
 /******************************************************************************/
+  function setEventHandlers() {
+    initRankSort();
 
-  // When someone submits a todo 
-  whatTodoBox.on("keyup", function(event) {
-     const key = event.which;
-     const wtdBg = whatTodoBox.closest(".what-todo-box-bg");
+    // When someone submits a todo 
+    whatTodoBox.on("keyup", function(event) {
+      const key = event.which;
+      const wtdBg = whatTodoBox.closest(".what-todo-box-bg");
 
-     if(key === 13) {
-       handlerInsertTodo();
-       wtdBg.removeClass("active");
-     }
-     if(key === 27) {
-       wtdBg.removeClass("active");
-     }
-  });
+      if(key === 13) {
+        handlerInsertTodo();
+        wtdBg.removeClass("active");
+      }
+      if(key === 27) {
+        wtdBg.removeClass("active");
+      }
+    });
 
-  whatTodoBox.closest(".what-todo-box-bg")
-  .on("click", ".todo-add", handlerInsertTodo);
+    whatTodoBox.closest(".what-todo-box-bg")
+    .on("click", ".todo-add", handlerInsertTodo);
 
-  categories.on("click", ".cat-column", renderCategoryFocusPage);
+    categories.on("click", ".cat-column", renderCategoryFocusPage);
+    const todoWrapper = $(".todo-wrapper");
+    // Checkbox completed handler
+    todoWrapper.on("click", "input[type=checkbox]", handlerChecked);
 
-  // TODO: Checkbox completed handler
-  categories.on("click", "checkbox", handlerChecked);
+    // TODO: Delete Button handler
+    todoWrapper.on("click", ".edit", handlerDelete);
 
-  // TODO: Delete Button handler
-  categories.on("click", ".edit", handlerDelete);
+    // TODO: Edit Button handler
+    todoWrapper.on("click", ".edit", handlerEdit);
 
-  // TODO: Edit Button handler
-  categories.on("click", ".edit", handlerEdit);
+    // TODO: Save Edit Button handler
+    todoWrapper.on("click", ".save-edit", handlerSaveEdit);
 
-  // TODO: Save Edit Button handler
-  categories.on("click", ".save-edit", handlerSaveEdit);
-
-  // TODO: Change Category Button handler
-  categories.on("click", ".change-category-edit", handlerChangeCategoryEdit);
-
-  // TODO: Change Ranks handler
-
+    // TODO: Change Category Button handler
+    todoWrapper.on("click", ".change-category-edit", handlerChangeCategoryEdit);
+  }
 
 /******************************************************************************/
 /*********************** Sortable for rank sort *******************************/
@@ -208,37 +208,20 @@ $(function(){
 
 function initRankSort() {
   // create a loop for the categories ul - going to add an id attribute to them
-  const arrayOfCatIds = [];
-
-  catSection.each(function() {
-    const catId = $(this).find("section").attr("data-id");
-    const ulId = `cat-sort-${catId}`;
-    $(this).find("ul").attr("id", ulId);
-    arrayOfCatIds.push(ulId);
-  });
-
-  arrayOfCatIds.forEach((ulId) => {
-    const list = document.getElementById(ulId);
-    console.log(list);
-    new Sortable.create(list, {
-      animation: 200,
-      store: {
-        get: function(){},
-        set: handleRankSorting 
-      }
-    });
-  });
+  $("ul").sortable({update: handleRankSorting}).disableSelection();
 }
 // create a sortable handler for when set is called
-function handleRankSorting(sortable) {
-  const newRanks = sortable.toArray().map((value, index) => {
-    return {
-      id: value,
-      rank: index + 1
-    };
+function handleRankSorting(event, ui) {
+  const arr = $(this).find("li").sortable().toArray();
+  const rankObj = {new_ranks: []};
+  let count = 1;
+  arr.forEach((todo) => {
+    rankObj.new_ranks.push({
+      id: $(todo).attr("data-id"),
+      rank: count++
+    });
   });
-  const objArr = {new_ranks: newRanks};
-  updateRanks(objArr, errorFlasher, ()=>{console.log("new ranks saved")});
+  updateRanks(rankObj, errorFlasher, ()=>{console.log("new ranks saved")});
 }
 /******************************************************************************/
 /*********************** handlers for updates *********************************/
@@ -250,6 +233,7 @@ function handleRankSorting(sortable) {
   }
   
   function handlerSaveEdit(event) {
+    console.log("handler save edit");
     const todoId = $(this).closest("li").attr("data-id");
     // TODO: find whaat
     const title = $(this).closest("div").find().val();
@@ -257,12 +241,14 @@ function handleRankSorting(sortable) {
   }
   
   function handlerEdit(event) {
+    console.log("handler edit");
     // TODO: find waaaat?
     $(this).closest("li").find().addClass();
     $(this).closest("li").find().removeClass();
   }
 
   function handlerDelete(event) {
+    console.log("handler delete");
     const todo = $(this).closest("li");
     const todoId = todo.attr("data-id");
     const title = todo.find("label").text();
@@ -271,6 +257,7 @@ function handleRankSorting(sortable) {
 
   // TODO: make the .deleter-flash with a yes or no button
   function areYouSure(title, todoId, todo) {
+    console.log("are you sure");
     const deleterFlash = $(".deleter-flash");
     deleterFlash.find("p").text(title);
     deleterFlash.addClass("deleter-active");
@@ -314,10 +301,11 @@ function handleRankSorting(sortable) {
     if(todoItem) {
       todoItem.remove();
     }
-    console.log(todo.category_id);
+
     categoryObj[todo.category_id].find("ul").append(todoMaker(todo));
     // TODO: This might cause problems
     catSection.find("ul").slideDown();
+    countTodos();
   }
 
   // Display a flash error
@@ -442,7 +430,7 @@ function handleRankSorting(sortable) {
         populateCategoryObj(data.categories);
         catSection = categories.find(".cat-column");
         renderAllCategories();
-        initRankSort();
+        setEventHandlers();
         // TODO: remove class on #what-todo-box
     });
   }
