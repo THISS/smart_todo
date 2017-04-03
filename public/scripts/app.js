@@ -190,7 +190,7 @@ $(function(){
     todoWrapper.on("click", "input[type=checkbox]", handlerChecked);
 
     // TODO: Delete Button handler
-    todoWrapper.on("click", ".edit", handlerDelete);
+    todoWrapper.on("click", ".trash", handlerDelete);
 
     // TODO: Edit Button handler
     todoWrapper.on("click", ".edit", handlerEdit);
@@ -337,7 +337,7 @@ function handleRankSorting(event, ui) {
       whatTodoBox.val('');
       // change the categories number of todos
       const categoryUl = categoryObj[todo.category_id].find("ul");
-      categoryUl.append(todoMaker(todo));
+      categoryUl.prepend(todoMaker(todo));
     }
     countTodos();
   }
