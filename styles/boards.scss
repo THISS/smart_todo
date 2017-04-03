@@ -22,6 +22,10 @@ body {
   }
 }
 
+.trash:hover{
+  background-color: #b5b5b5;
+}
+
 .edit:hover{
   background-color: #b5b5b5;
   .change-save{
@@ -39,6 +43,7 @@ body {
 
 .deleter-flash{
   display:none;
+  position:absolute;
 }
 
 .deleter-active{

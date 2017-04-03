@@ -41,14 +41,20 @@ body > header .nav.columns {
   left: 0;
   top: 0;
   background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
 }
 
 .what-todo-box-bg.active #what-todo-box {
+  margin-left: 3em;
   width: 75%;
   height: 100px;
   top: 5em;
   transform: translateY(-50%);
   font-size: 50px;
+}
+
+.what-todo-box-bg.active .mic {
+  display: none;
 }
 
 .what-todo-box-bg.active .fa-plus {
@@ -92,4 +98,28 @@ body > header .nav.columns {
 main {
   margin-top: 7em;
   padding: 1em;
+}
+
+.wrapper {
+  display: flex;
+}
+
+.mic-clicked {
+  color: red;
+}
+
+.power {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.power i {
+  display: flex;
+  font-size: 40em;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
