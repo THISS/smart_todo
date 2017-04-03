@@ -12,8 +12,10 @@ body > header {
 }
 
 body > header h1 {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 700;
   color: #244751;
-  font-size: 2em;
+  font-size: 2.5em;
   padding-right: 0;
 }
 
@@ -108,6 +110,15 @@ main {
   color: red;
 }
 
+@keyframes opacitypulse {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .power {
   display: flex;
   height: 100%;
@@ -122,4 +133,8 @@ main {
   justify-content: center;
   align-items: center;
   text-align: center;
+  animation-duration: 1.5s;
+  animation-name: opacitypulse;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }

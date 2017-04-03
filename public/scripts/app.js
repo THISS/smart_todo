@@ -177,6 +177,7 @@ $(function(){
         wtdBg.removeClass("active");
       }
       if(key === 27) {
+        $(this).val("");
         wtdBg.removeClass("active");
       }
     });

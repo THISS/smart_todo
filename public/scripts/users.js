@@ -8,6 +8,7 @@ $(function () {
 			method: "GET",
 			success: function(data) {
 				button.text("Logout");
+				$("#what-todo-box").removeAttr("disabled");
 				globalRender();
 			},
 			fail: function(error) {
@@ -25,7 +26,7 @@ $(function () {
 			success: function(data) {
 				button.text("Login");
 				$(".categories").html(loHtml);
-				//TODO: add a class to disable the #what-todo-box
+				$("#what-todo-box").attr("disabled", "disabled");
 			},
 			fail: function(err) {
 				errorFlash.text(error.error);
