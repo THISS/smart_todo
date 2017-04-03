@@ -24,7 +24,7 @@ $(function () {
 			method: "GET",
 			success: function(data) {
 				button.text("Login");
-				$(".categories").html("loHtml");
+				$(".categories").html(loHtml);
 				//TODO: add a class to disable the #what-todo-box
 			},
 			fail: function(err) {
@@ -40,4 +40,5 @@ $(function () {
 			logout(loginBtn);
 		}
 	});
+	logout(loginBtn)
 });
