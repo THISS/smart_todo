@@ -190,18 +190,18 @@ $(function(){
     // Checkbox completed handler
     todoWrapper.on("click", "input[type=checkbox]", handlerChecked);
 
-    // TODO: Delete Button handler
+    // Delete Button handler
     todoWrapper.on("click", ".trash", handlerDelete);
 
-    // TODO: Edit Button handler
+    // Edit Button handler
     todoWrapper.on("click", ".edit", handlerEdit);
 
-    // TODO: Save Edit Button handler
+    // Save Edit Button handler
     todoWrapper.on("click", ".save-edit", handlerSaveEdit);
 
-    // TODO: Change Category Button handler
+    // Change Category Button handler
     todoWrapper.on("click", ".change-category-edit", handlerChangeCategoryEdit);
-  }
+  
 
 /******************************************************************************/
 /*********************** Sortable for rank sort *******************************/
@@ -234,17 +234,24 @@ function handleRankSorting(event, ui) {
   }
   
   function handlerSaveEdit(event) {
-    console.log("handler save edit");
+    const checkLabel = $(this).closest("li").find(".check-the-label");
+    const changeSave = $(this).closest("li").find(".change-save");
     const todoId = $(this).closest("li").attr("data-id");
-    // TODO: find whaat
-    const title = $(this).closest("div").find().val();
-    updateTitle(title, todoId, errorFlasher, rerenderTodo);
+    const title = changeSave.find("input").val();
+    updateTitle(title, todoId, errorFlasher, prependerTodo);
+    checkLabel.find("label").text(title);
+    changeSave.addClass("hide-me");
+    checkLabel.removeClass("hide-me");
   }
   
   function handlerEdit(event) {
     console.log("handler edit");
-    $(this).closest("li").find().addClass();
-    $(this).closest("li").find().removeClass();
+    const checkLabel = $(this).closest("li").find(".check-the-label");
+    const changeSave = $(this).closest("li").find(".change-save");
+    changeSave.find("input").val(checkLabel.find("label").text());
+    checkLabel.addClass("hide-me");
+    changeSave.removeClass("hide-me");
+
   }
 
   function handlerDelete(event) {
@@ -304,6 +311,19 @@ function handleRankSorting(event, ui) {
     }
 
     categoryObj[todo.category_id].find("ul").append(todoMaker(todo));
+    // TODO: This might cause problems
+    catSection.find("ul").slideDown();
+    countTodos();
+  }
+  
+  function prependerTodo(todo) {
+    // use jQuery remove before populating again - making a get /todos/:todoId
+    const todoItem = categoryObj[todo.category_id].find(`li[data-id="${todo.id}"]`);
+    if(todoItem) {
+      todoItem.remove();
+    }
+
+    categoryObj[todo.category_id].find("ul").prepend(todoMaker(todo));
     // TODO: This might cause problems
     catSection.find("ul").slideDown();
     countTodos();
@@ -374,14 +394,12 @@ function handleRankSorting(event, ui) {
   // This will render the categories as buttons 
   // and the main form as disabled
   function renderSelectCategoryPage(todo) {
-    catSection.off();
     // TODO: This might cause problems
     catSection.find("ul").slideUp();
+    catSection.off();
     catSection.on("click", function(event) {
       const catId = $(this).find("section").attr("data-id");
       updateCategory(catId, todo.id, errorFlasher, rerenderTodo);
-      catSection.off();
-      
       catSection.on("click", renderCategoryFocusPage);
       whatTodoBox.val('');
     });

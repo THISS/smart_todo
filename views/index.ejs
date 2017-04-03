@@ -73,15 +73,17 @@
 
           <script type="x-handlebarsjs" id="todo-html">
                 <li class="box post" data-id="{{id}}" data-rank="{{rank}}">
-                  <input type="checkbox" id="todo-{{id}}" class="todo-check"{{#if completed}} checked {{/if}}/>
-                  <label for="todo-{{id}}"class="check_item">{{title}}</label>
+                  <div class="check-the-label">
+                    <input type="checkbox" id="todo-{{id}}" class="todo-check"{{#if completed}} checked {{/if}}/>
+                    <label for="todo-{{id}}"class="check_item">{{title}}</label>
+                  </div>
                  <div class="ed-buttons">
                   <button class="edit"><i class="fa fa-pencil-square-o"></i></button>
                   <button class="trash"><i class="fa fa-trash-o"></i></button>
                  </div>
-                 <div class="change-save">
-                  <button class="change"><i class="fa fa-exchange"></i></button>
-                  <form><input type="text" name="edit"></form><button class="change"><i class="fa fa-floppy-o"></i></button>
+                 <div class="change-save hide-me">
+                  <button class="change-category-edit"><i class="fa fa-exchange"></i></button>
+                  <form><input type="text" name="edit"></form><button class="save-edit"><i class="fa fa-floppy-o"></i></button>
                  </div>
                 </li>
           </script>
