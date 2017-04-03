@@ -4,15 +4,25 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>todo list</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.0/css/bulma.min.css" />
+  <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.0/css/bulma.min.css"/>
   <link rel="stylesheet" type="text/css" href="/styles/boards.css">
   <link rel="stylesheet" type="text/css" href="/styles/layout.css">
   <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK9KGVsj13oDFAXoWJoNguMVkqnEZ9GY0&libraries=places"></script>
 </head>
 <body>
   <header>
+  <style>
+      html, body #map {
+        height: 20em;
+        width: 40em;
+        padding: 10px;
+        margin: 10px;
+      }
+    </style>
       <nav class="nav has-shadow columns is-desktop" id="top">
           <h1 class="column is-one-quarter"> Smart TODO</h1>
           <div class="column">
@@ -146,10 +156,58 @@
             </div>
           </div>
         </div>
-
       </div>
     </section>
 </main>
+
+<div id="map"></div>
+  <script>
+    var map;
+    var infowindow;
+//initializes map and centers onto Vancouver
+    function initialize() {
+      var center = new google.maps.LatLng(49.281422, -123.12303);
+        map = new google.maps.Map(document.getElementById('map'), {
+        center: center,
+        zoom: 14
+      });
+
+    var request = {
+    location: center,
+    radius: 4000,
+    types: ['restaurant'],
+    openNow: true
+  };
+
+infowindow = new google.maps.InfoWindow();
+  var service = new google.maps.places.PlacesService(map);
+
+service.nearbySearch(request, callback);
+}
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+  for (var i = 0; i < results.length; i++) {
+    createMarker(results[i]);
+    }
+  }
+}
+
+function createMarker(place) {
+  var placeLoc = place.geometry.location;
+  var marker = new google.maps.Marker({
+      map: map,
+      position: place.geometry.location
+    });
+
+google.maps.event.addListener(marker, 'click', function() {
+infowindow.setContent(place.name + "<br />" + place.vicinity + "<br />" + "Rating: " + place.rating + "<br />");
+    infowindow.open(map, this);
+  });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
   <script type="text/javascript" src="/scripts/bulma.js"></script>
   <script type="text/javascript" src="/scripts/boards.js"></script>
