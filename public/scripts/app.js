@@ -233,7 +233,6 @@ function handleRankSorting(event, ui) {
   function handlerChangeCategoryEdit(event) {
     event.stopPropagation();
     const todo = {id: $(this).closest("li").attr("data-id")};
-    console.log(todo);
     renderSelectCategoryPage(todo);
     const checkLabel = $(this).closest("li").find(".check-the-label");
     const changeSave = $(this).closest("li").find(".change-save");
@@ -408,7 +407,7 @@ function handleRankSorting(event, ui) {
       catSection.off();
       const catId = $(this).find("section[data-id]").attr("data-id");
       updateCategory(catId, todo.id, errorFlasher, rerenderTodo);
-      catSection.on("click", renderCategoryFocusPage);
+      catSection.on("click", renderAllCategories);
       whatTodoBox.val('');
     });
   }

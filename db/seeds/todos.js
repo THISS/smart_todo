@@ -28,19 +28,11 @@ exports.seed = function(knex, Promise) {
           user_id: 1
         }),
         knex('todos').insert({
-          rank: 4,
-          title: 'I want to eat at Caveman Cafe',
+          rank: 1,
+          title: 'I want to read a dictionary from front to back',
           completed: false,
           deleted: false,
-          category_id: 3,
-          user_id: 1
-        }),
-        knex('todos').insert({
-          rank: 5,
-          title: 'I want to eat at Lighthouse Lab Cafe',
-          completed: false,
-          deleted: false,
-          category_id: 3,
+          category_id: 2,
           user_id: 1
         }),
         knex('todos').insert({
