@@ -41,5 +41,6 @@ $(function () {
 			logout(loginBtn);
 		}
 	});
+	
 	logout(loginBtn)
 });

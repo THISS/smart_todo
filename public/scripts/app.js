@@ -98,7 +98,7 @@ $(function(){
   function deleteTodo(todoId, errCb, successCb) {
     $.ajax({
       method: 'DELETE',
-      url: `/todos/${todoId}/delete`,
+      url: `/todos/${todoId}`,
       success: successCb,
       fail: errCb
     });
@@ -243,28 +243,28 @@ function handleRankSorting(event, ui) {
   
   function handlerEdit(event) {
     console.log("handler edit");
-    // TODO: find waaaat?
     $(this).closest("li").find().addClass();
     $(this).closest("li").find().removeClass();
   }
 
   function handlerDelete(event) {
-    console.log("handler delete");
     const todo = $(this).closest("li");
     const todoId = todo.attr("data-id");
     const title = todo.find("label").text();
     areYouSure(title,todoId, todo);
   }
 
-  // TODO: make the .deleter-flash with a yes or no button
   function areYouSure(title, todoId, todo) {
-    console.log("are you sure");
     const deleterFlash = $(".deleter-flash");
     deleterFlash.find("p").text(title);
     deleterFlash.addClass("deleter-active");
     deleterFlash.on("click", ".nobutton", () => {deleterFlash.removeClass("deleter-active")});
     deleterFlash.on("click", ".yesbutton", function(){
-      deleteTodo(todoId, errorFlash, todo.remove);
+      deleteTodo(todoId, errorFlash, () => {
+        deleterFlash.removeClass("deleter-active");
+        todo.remove();
+        countTodos();
+      });
     });
   }
 
@@ -437,6 +437,5 @@ function handleRankSorting(event, ui) {
         // TODO: remove class on #what-todo-box
     });
   }
-  startController();
   globalRender = startController;
 });

@@ -1,7 +1,11 @@
-body {
+html, body {
   background-color: #EEE;
   position: relative;
   font-size: 16px;
+}
+
+button {
+  cursor: pointer;
 }
 
 /* HEADER */
@@ -10,6 +14,7 @@ body > header {
   position: fixed;
   width: 100%;
   top: 0;
+  z-index: 1;
 
   h1 {
     font-family: Helvetica, Arial, sans-serif;
