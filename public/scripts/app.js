@@ -1,3 +1,4 @@
+let globalRender;
 $(function(){
   // Targets
   const errorFlash = $(".error-flash");
@@ -155,7 +156,7 @@ $(function(){
     $.ajax({
       method: 'POST',
       url:'/todos',
-      data: title,     
+      data: {title: title},     
       success: successCb,
       fail: errCb
     });
@@ -165,44 +166,143 @@ $(function(){
 /******************************************************************************/
 
   // When someone submits a todo 
-  whatTodoBox.closest("form").on("submit", function (event) {
-      event.preventDefault();
+  whatTodoBox.on("keyup", function(event) {
+     const key = event.which;
+     const wtdBg = whatTodoBox.closest(".what-todo-box-bg");
 
-      if(validateForm(whatTodoBox)) {
-        const title = whatTodoBox.val();
-        insertTodo(title, errorFlasher, addedTodo);
-      }
-      else{
-        console.log("Validation failed");
-      }
+     if(key === 13) {
+       handlerInsertTodo();
+       wtdBg.removeClass("active");
+     }
+     if(key === 27) {
+       wtdBg.removeClass("active");
+     }
   });
 
-  categories.on("click", "section", renderCategoryFocusPage);
+  whatTodoBox.closest(".what-todo-box-bg")
+  .on("click", ".todo-add", handlerInsertTodo);
+
+  categories.on("click", ".cat-column", renderCategoryFocusPage);
 
   // TODO: Checkbox completed handler
+  categories.on("click", "checkbox", handlerChecked);
 
   // TODO: Delete Button handler
+  categories.on("click", ".edit", handlerDelete);
 
   // TODO: Edit Button handler
+  categories.on("click", ".edit", handlerEdit);
 
   // TODO: Save Edit Button handler
+  categories.on("click", ".save-edit", handlerSaveEdit);
 
   // TODO: Change Category Button handler
+  categories.on("click", ".change-category-edit", handlerChangeCategoryEdit);
 
   // TODO: Change Ranks handler
+
+
+/******************************************************************************/
+/*********************** Sortable for rank sort *******************************/
+/******************************************************************************/
+
+function initRankSort() {
+  // create a loop for the categories ul - going to add an id attribute to them
+  catSection.each(function() {
+    const catId = $(this).attr("data-id");
+    $(this).find("ul").attr("id", "cat-sort-" + catId);
+    const list = document.getElementById("cat-sort-" + catId);
+    Sortable.create(list, {
+      animation: 200,
+      store: {
+        get: function(){},
+        set: handleRankSorting 
+      }
+    });
+  });
+}
+// create a sortable handler for when set is called
+function handleRankSorting(sortable) {
+  console.log(sortable);
+}
+/******************************************************************************/
+/*********************** handlers for updates *********************************/
+/******************************************************************************/
+
+  function handlerChangeCategoryEdit(event) {
+    const todo = {id: $(this).closest("li").attr("data-id")};
+    renderSelectCategoryPage(todo);
+  }
+  
+  function handlerSaveEdit(event) {
+    const todoId = $(this).closest("li").attr("data-id");
+    // TODO: find whaat
+    const title = $(this).closest("div").find().val();
+    updateTitle(title, todoId, errorFlasher, rerenderTodo);
+  }
+  
+  function handlerEdit(event) {
+    // TODO: find waaaat?
+    $(this).closest("li").find().addClass();
+    $(this).closest("li").find().removeClass();
+  }
+
+  function handlerDelete(event) {
+    const todo = $(this).closest("li");
+    const todoId = todo.attr("data-id");
+    const title = todo.find("label").text();
+    areYouSure(title,todoId, todo);
+  }
+
+  // TODO: make the .deleter-flash with a yes or no button
+  function areYouSure(title, todoId, todo) {
+    const deleterFlash = $(".deleter-flash");
+    deleterFlash.find("p").text(title);
+    deleterFlash.addClass("deleter-active");
+    deleterFlash.on("click", ".nobutton", () => {deleterFlash.removeClass("deleter-active")});
+    deleterFlash.on("click", ".yesbutton", function(){
+      deleteTodo(todoId, errorFlash, todo.remove);
+    });
+  }
+
+  function handlerChecked(event) {
+    // Get todo id
+    const todoId = $(this).closest("li").attr("data-id");
+    if($(this).is(":checked")) {
+      // update the todo to be checked
+      updateCompleted(true, todoId, errorFlasher, rerenderTodo);
+    }else {
+      // update the todo to be not checked
+      updateCompleted(false, todoId, errorFlasher, rerenderTodo);
+    }
+  }
+
+  function handlerInsertTodo() {
+    if(validateForm(whatTodoBox)) {
+      const title = whatTodoBox.val();
+      insertTodo(title, errorFlasher, addedTodo);
+    }
+    else{
+      console.log("Validation failed");
+    }
+  }
+
 
 /******************************************************************************/
 /*********************** Our helper functions *********************************/
 /******************************************************************************/
 
   // On update rerender the todo
-  function rerenderTodo(todoId) {
+  function rerenderTodo(todo) {
     // use jQuery remove before populating again - making a get /todos/:todoId
-    getATodo(todoId, errorFlasher, (todo) => {
-      categoryObj[todo.category_id].find(`li[data-id="${todo.id}"]`).replaceWith(todoMaker(todo));
-      // TODO: This might cause problems
-      catSection.find("ul").slideDown();
-    });
+    const todoItem = categoryObj[todo.category_id].find(`li[data-id="${todo.id}"]`);
+    if(todoItem) {
+      todoItem.remove();
+    }
+    console.log(todo.category_id);
+    categoryObj[todo.category_id].find("ul").append(todoMaker(todo));
+    // TODO: This might cause problems
+    catSection.find("ul").slideDown();
   }
 
   // Display a flash error
@@ -221,7 +321,7 @@ $(function(){
   function countTodos() {
     const catNumber = $(".cat-number");
     catNumber.each(function(){
-      let count = $(this).closest("section").find(".todo-wrapper").children().length;
+      let count = $(this).closest("section").find(".todo-wrapper").children().length || 0;
       $(this).text(count);
     });
   }
@@ -234,22 +334,10 @@ $(function(){
       whatTodoBox.val('');
       // change the categories number of todos
       const categoryUl = categoryObj[todo.category_id].find("ul");
-      if(categoryUl.children().length < 3) {
-        categoryUl.append(todoMaker(todo));
-      }
+      categoryUl.append(todoMaker(todo));
     }
     countTodos();
   }
-
-  // TODO: make a function that will remove the click handlers to submit PUT /todos/:todoId/category
-  function updateThisTodoCategory(todoId, category_id) {
-    const updateCatObj = {category_id: category_id};
-
-    
-  }
-  // TODO: and then does an ajax call to PUT /todos/:todoId/category passing the category_id in the body which on success will:
-  // TODO:  - add the todos to the categories by calling todoLooper()
-  // TODO: and then adds a click handler to expand to single category mode on all of the categories
 
 /******************************************************************************/
 /*********************** Form submitting todo *********************************/
@@ -261,11 +349,11 @@ $(function(){
       // TODO: Change to a pretty flash message
       alert ("Can not sumbit an empty item");
       return false;
-    }else if (parsed.val().length < 3) {
+    }else if (parsed.length < 3) {
       alert ("Try a little harder at making a todo");
       return false;
     }
-    else if (parsed.val().length > 127 ) {
+    else if (parsed.length > 127 ) {
       // TODO: Change to a pretty flash message
       alert ("Exceeded character limit of 127");
       return false;
@@ -281,17 +369,15 @@ $(function(){
 // catSection is defined up the top
   // This will render the categories as buttons 
   // and the main form as disabled
-  function renderSelectCategoryPage(todoId) {
+  function renderSelectCategoryPage(todo) {
     catSection.off();
     // TODO: This might cause problems
     catSection.find("ul").slideUp();
-    catSection.on("click", (event) => {
-      const catId = $(this).getAttr("data-id");
-      updateCategory(catId, todoId, errorFlasher, rerenderTodo(todoId));
+    catSection.on("click", function(event) {
+      const catId = $(this).find("section").attr("data-id");
+      updateCategory(catId, todo.id, errorFlasher, rerenderTodo);
       catSection.off();
-      catSection.on("click", (event) => {
-
-      });
+      catSection.on("click", renderCategoryFocusPage);
     });
   }
 
@@ -301,14 +387,14 @@ $(function(){
     // remove all of the elements with class x
     catSection.each((key, val) => {
       // TODO: take the class and remove it
-      val.removeClass();
+      // val.removeClass();
     });
     // TODO: add the class here
-    that.addClass();
+    // that.addClass();
     $(document).on("click", (event) => {
       if(!$(event.target).closest("cat-column").length) {
         // TODO: need to remove the class
-        that.removeClass();
+        // that.removeClass();
       }
     });
   }
@@ -327,7 +413,7 @@ $(function(){
         catSection.find("ul").empty();
         todoLooper(data.todos);
     });
-    catSection.on("click", renderCategoryFocus);
+    catSection.on("click", renderCategoryFocusPage);
   }
 
 /******************************************************************************/
@@ -339,9 +425,12 @@ $(function(){
     getAllTodosAndCategories(errorFlasher, (data) => {
         categoryLooper(data.categories);
         populateCategoryObj(data.categories);
-        catSection = categories.find("section");
+        catSection = categories.find(".cat-column");
         renderAllCategories();
+        initRankSort();
+        // TODO: remove class on #what-todo-box
     });
   }
   startController();
+  globalRender = startController;
 });

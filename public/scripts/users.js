@@ -8,6 +8,7 @@ $(function () {
 			method: "GET",
 			success: function(data) {
 				button.text("Logout");
+				globalRender();
 			},
 			fail: function(error) {
 				errorFlash.text(error.error);
@@ -15,12 +16,16 @@ $(function () {
 		});
 	}
 
+	const loHtml = $("#loggedout-html").html();
+	
 	function logout(button) {
 		$.ajax ({
 			url: "/users/logout",
 			method: "GET",
 			success: function(data) {
-				button.text("Login")
+				button.text("Login");
+				$(".categories").html("loHtml");
+				//TODO: add a class to disable the #what-todo-box
 			},
 			fail: function(err) {
 				errorFlash.text(error.error);

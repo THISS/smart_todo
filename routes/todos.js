@@ -41,7 +41,11 @@ module.exports = (dbHelpers, helperFuncs) =>{
   });
 
   router.get("/:todoid", (req, res) => {
-    helperFuncs.isUserLoggedIn(req, res);
+    // Is user logged in
+    if (!req.session.user_id) {
+      req.flash("error", "You must login to play around with the todos");
+      return res.json({error: req.flash("error")});
+    }
     dbHelpers.selectATodo(Number(req.params.todoid))
     .then((results) => {
       console.log(results[0]);
@@ -60,7 +64,7 @@ module.exports = (dbHelpers, helperFuncs) =>{
       req.flash("error", "You must login to play around with the todos");
       return res.json({error: req.flash("error")});
     }
-    const titleVar = req.body.todo;
+    const titleVar = req.body.title;
     let conflict = false;
     // cat id 5 is other
     let catID = 5;
@@ -121,9 +125,16 @@ module.exports = (dbHelpers, helperFuncs) =>{
       req.flash("error", "You must login to play around with the todos");
       return res.json({error: req.flash("error")});
     }
-    dbHelpers.updateTodo({category_id: req.body.category_id}, req.params.todoid)
+    const catId = req.body.category_id;
+    const userId = req.params.todoid;
+
+    dbHelpers.getMaxRank(userId, catId)
+    .then((rows) => {
+      const newRank = rows[0].max ? rows[0].max + 1 : 1;
+      return dbHelpers.updateTodo({category_id: catId, rank: newRank}, userId)
+    })
     .then((results) => {
-      res.json(results);
+      res.json(results[0]);
       return;
     }).catch((err) => {
       console.log(err);
@@ -141,7 +152,7 @@ module.exports = (dbHelpers, helperFuncs) =>{
     const titleVar = req.body.title;
     dbHelpers.updateTodo({title: titleVar}, req.params.todoid)
     .then((results) => {
-      res.json(results);
+      res.json(results[0]);
       return;
     }).catch((err) => {
       console.log(err);
@@ -158,7 +169,7 @@ module.exports = (dbHelpers, helperFuncs) =>{
     const completed = req.body.completed;
     dbHelpers.updateTodo({completed: completed}, req.params.todoid)
     .then((results) => {
-      res.json(results);
+      res.json(results[0]);
       return;
     }).catch((err) => {
       console.log(err);
@@ -175,7 +186,7 @@ module.exports = (dbHelpers, helperFuncs) =>{
 
     dbHelpers.updateTodo({deleted: true}, req.params.todoid)
     .then((results) => {
-      res.json(results);
+      res.json({success: "deleted successfully"});
       return;
     }).catch((err) => {
       console.log(err);

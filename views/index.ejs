@@ -23,7 +23,7 @@
             </div>
           </div>
           <div class="column is-one-quarter">
-               <button class="login button is-primary is-large" type="button">Login</button>
+               <button class="login button is-primary is-large" type="button"><% if (loggedIn) { %>Logout<% }else { %>Login<% } %></button>
           </div>
     </nav>
   </header>
@@ -59,18 +59,19 @@
                   <form><input type="text" name="edit"></form><button class="change"><i class="fa fa-floppy-o"></i></button>
                  </div>
                 </li>
-               <section class="deleter-flash">
-                <p>
-                <button class="yesbutton"><i class="fa fa-thumbs-o-up fa-5x"></i></button>
-                <button class="nobutton"><i class="fa fa-thumbs-o-down fa-5x"></i></button>
-               </p>
-               </section>
           </script>
+          <section class="deleter-flash">
+            <h4>Are You Sure You Want To Delete:</h4>
+            <p></p>
+            <button class="yesbutton"><i class="fa fa-thumbs-o-up fa-5x"></i></button>
+            <button class="nobutton"><i class="fa fa-thumbs-o-down fa-5x"></i></button>
+          </section>
 
     </section>
   </main>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.5.1/Sortable.min.js"></script>
   <script type="text/javascript" src="/scripts/bulma.js"></script>
   <script type="text/javascript" src="/scripts/boards.js"></script>
   <script type="text/javascript" src="/scripts/users.js"></script>
