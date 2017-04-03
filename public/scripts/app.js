@@ -182,19 +182,87 @@ $(function(){
   whatTodoBox.closest(".what-todo-box-bg")
   .on("click", ".todo-add", handlerInsertTodo);
 
-  categories.on("click", "section", renderCategoryFocusPage);
+  categories.on("click", ".cat-column", renderCategoryFocusPage);
 
   // TODO: Checkbox completed handler
+  categories.on("click", "checkbox", handlerChecked);
 
   // TODO: Delete Button handler
+  categories.on("click", ".edit", handlerDelete);
 
   // TODO: Edit Button handler
+  categories.on("click", ".edit", handlerEdit);
 
   // TODO: Save Edit Button handler
+  categories.on("click", ".save-edit", handlerSaveEdit);
 
   // TODO: Change Category Button handler
+  categories.on("click", ".change-category-edit", handlerChangeCategoryEdit);
 
   // TODO: Change Ranks handler
+
+/******************************************************************************/
+/*********************** handlers for updates *********************************/
+/******************************************************************************/
+
+  function handlerChangeCategoryEdit(event) {
+    const todo = {id: $(this).closest("li").attr("data-id")};
+    renderSelectCategoryPage(todo);
+  }
+  
+  function handlerSaveEdit(event) {
+    const todoId = $(this).closest("li").attr("data-id");
+    // TODO: find whaat
+    const title = $(this).closest("div").find().val();
+    updateTitle(title, todoId, errorFlasher, rerenderTodo);
+  }
+  
+  function handlerEdit(event) {
+    // TODO: find waaaat?
+    $(this).closest("li").find().addClass();
+    $(this).closest("li").find().removeClass();
+  }
+
+  function handlerDelete(event) {
+    const todo = $(this).closest("li");
+    const todoId = todo.attr("data-id");
+    const title = todo.find("label").text();
+    areYouSure(title,todoId, todo);
+  }
+
+  // TODO: make the .deleter-flash with a yes or no button
+  function areYouSure(title, todoId, todo) {
+    const deleterFlash = $(".deleter-flash");
+    deleterFlash.find("p").text(title);
+    deleterFlash.addClass("deleter-active");
+    deleterFlash.on("click", ".nobutton", () => {deleterFlash.removeClass("deleter-active")});
+    deleterFlash.on("click", ".yesbutton", function(){
+      deleteTodo(todoId, errorFlash, todo.remove);
+    });
+  }
+
+  function handlerChecked(event) {
+    // Get todo id
+    const todoId = $(this).closest("li").attr("data-id");
+    if($(this).is(":checked")) {
+      // update the todo to be checked
+      updateCompleted(true, todoId, errorFlasher, rerenderTodo);
+    }else {
+      // update the todo to be not checked
+      updateCompleted(false, todoId, errorFlasher, rerenderTodo);
+    }
+  }
+
+  function handlerInsertTodo() {
+    if(validateForm(whatTodoBox)) {
+      const title = whatTodoBox.val();
+      insertTodo(title, errorFlasher, addedTodo);
+    }
+    else{
+      console.log("Validation failed");
+    }
+  }
+
 
 /******************************************************************************/
 /*********************** Our helper functions *********************************/
@@ -232,16 +300,6 @@ $(function(){
       let count = $(this).closest("section").find(".todo-wrapper").children().length || 0;
       $(this).text(count);
     });
-  }
-
-  function handlerInsertTodo() {
-    if(validateForm(whatTodoBox)) {
-      const title = whatTodoBox.val();
-      insertTodo(title, errorFlasher, addedTodo);
-    }
-    else{
-      console.log("Validation failed");
-    }
   }
 
   function addedTodo(todo) {
