@@ -377,7 +377,9 @@ function handleRankSorting(sortable) {
       const catId = $(this).find("section").attr("data-id");
       updateCategory(catId, todo.id, errorFlasher, rerenderTodo);
       catSection.off();
+      
       catSection.on("click", renderCategoryFocusPage);
+      whatTodoBox.val('');
     });
   }
 
