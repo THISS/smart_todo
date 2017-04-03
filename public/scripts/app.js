@@ -165,6 +165,7 @@ $(function(){
 /*********************** Set Events to Watch **********************************/
 /******************************************************************************/
   function setEventHandlers() {
+
     initRankSort();
 
     // When someone submits a todo 
@@ -186,6 +187,7 @@ $(function(){
     .on("click", ".todo-add", handlerInsertTodo);
 
     categories.on("click", ".cat-column", renderCategoryFocusPage);
+
     const todoWrapper = $(".todo-wrapper");
     // Checkbox completed handler
     todoWrapper.on("click", "input[type=checkbox]", handlerChecked);
@@ -201,7 +203,7 @@ $(function(){
 
     // Change Category Button handler
     todoWrapper.on("click", ".change-category-edit", handlerChangeCategoryEdit);
-  
+  }
 
 /******************************************************************************/
 /*********************** Sortable for rank sort *******************************/
@@ -229,8 +231,14 @@ function handleRankSorting(event, ui) {
 /******************************************************************************/
 
   function handlerChangeCategoryEdit(event) {
+    event.stopPropagation();
     const todo = {id: $(this).closest("li").attr("data-id")};
+    console.log(todo);
     renderSelectCategoryPage(todo);
+    const checkLabel = $(this).closest("li").find(".check-the-label");
+    const changeSave = $(this).closest("li").find(".change-save");
+    changeSave.addClass("hide-me");
+    checkLabel.removeClass("hide-me");
   }
   
   function handlerSaveEdit(event) {
@@ -245,7 +253,6 @@ function handleRankSorting(event, ui) {
   }
   
   function handlerEdit(event) {
-    console.log("handler edit");
     const checkLabel = $(this).closest("li").find(".check-the-label");
     const changeSave = $(this).closest("li").find(".change-save");
     changeSave.find("input").val(checkLabel.find("label").text());
@@ -398,7 +405,8 @@ function handleRankSorting(event, ui) {
     catSection.find("ul").slideUp();
     catSection.off();
     catSection.on("click", function(event) {
-      const catId = $(this).find("section").attr("data-id");
+      catSection.off();
+      const catId = $(this).find("section[data-id]").attr("data-id");
       updateCategory(catId, todo.id, errorFlasher, rerenderTodo);
       catSection.on("click", renderCategoryFocusPage);
       whatTodoBox.val('');

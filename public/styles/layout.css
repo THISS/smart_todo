@@ -143,3 +143,7 @@ main {
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
+
+.hide-me {
+  display: none;
+}
