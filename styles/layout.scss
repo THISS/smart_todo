@@ -43,13 +43,18 @@ body > header {
     left: 0;
     top: 0;
     background: rgba(0,0,0,.5);
+    z-index:100;
 
     #what-todo-box {
+      margin-left: 3em;
       width: 75%;
       height: 100px;
       top: 5em;
       transform: translateY(-50%);
       font-size: 50px;
+    }
+    .mic {
+      display: none;
     }
 
     .fa-plus {
@@ -97,3 +102,26 @@ main {
   padding: 1em;
 }
 
+.wrapper {
+  display: flex;
+}
+
+.mic-clicked {
+  //cursor: pointer;
+  color: red;
+}
+
+.power{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  i{
+    display:flex;
+    font-size: 40em;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+}

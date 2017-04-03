@@ -30,7 +30,10 @@
             <div class='what-todo-box-bg'>
               <i class="fa fa-times-circle todo-close" aria-hidden="true"></i>
               <i class="fa fa-plus todo-add" aria-hidden="true"></i>
-              <input class="input is-large" id="what-todo-box" type="text" name="todo" placeholder="What would you like to do?" ><br>
+            <div class="wrapper">
+              <input class="input is-large" id="what-todo-box" type="text" name="todo" placeholder="What would you like to do?" >
+                <button class="mic"><i class="fa fa-microphone fa-4x" aria-hidden="true"></i></button>
+            </div>
             </div>
           </div>
           <div class="column is-one-quarter">
@@ -74,9 +77,11 @@
             <h4>Are You Sure You Want To Delete:</h4>
             <p></p>
             <button class="yesbutton"><i class="fa fa-thumbs-o-up fa-5x"></i></button>
-            <button class="nobutton"><i class="fa fa-thumbs-o-down fa-5x"></i></button>
+            <button class="nobutton"><i class="fa fa-thumbs-o-down fa-5x"></i></button>        
           </section>
-
+        <section class="columns power">
+          <i class="fa fa-power-off column is-8" aria-hidden="true"></i>
+        </section>
     </section>
     <div id="map"></div>
   </main>

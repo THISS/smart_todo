@@ -27,7 +27,9 @@ $('.todo-add').on('click', function() {
   $('.what-todo-box-bg').removeClass('active')
 })
 
-
+$('.mic').click(function() {
+   $(this).toggleClass("mic-clicked")
+  });
 
 });
 
