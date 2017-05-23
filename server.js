@@ -14,7 +14,7 @@ const helperFunctions = require("./utils/helpers.js");
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 
-// Seperated Routes for each Resource
+// Separated Routes for each Resource
 const usersRoutes = require("./routes/users");
 const todosRoutes = require("./routes/todos");
 const databaseHelpers = require("./database/database_helpers")(knex);

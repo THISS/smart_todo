@@ -7,8 +7,8 @@ module.exports = (knex, helpers) => {
 
   router.get("/login", (req, res) => {
     if(!req.session.user_id){
-      // req.session.user_id = helpers.randomId();
-      req.session.user_id = 1;// Testing
+      req.session.user_id = helpers.randomId();
+      // req.session.user_id = 1;// Testing
     }
     res.json({loggedIn: true});
   });
